@@ -48,6 +48,8 @@ void BorrarXElemento(Nodo *lista, int posicion) {
             nodo = nodo->siguiente;
         }
         nodo->siguiente = nodo->siguiente->siguiente;
+    }else if(posicion == 0){
+        BorrarPrimerElemento(lista);
     }
 }
 
@@ -62,11 +64,10 @@ void imprimir(Nodo *lista) {
 int main() {
     Nodo *lista = NULL;
 
-    int salir = 0;
     int opcion = 0;
-    int valor;
+    int valor = 0;
 
-    while (salir != 1){
+    while (opcion != 7){
         printf("elije una opcion para usar la lista: \n");
         printf("1. Cargar elemento\n");
         printf("2. Borrar primer elemento\n");
@@ -80,7 +81,7 @@ int main() {
         switch (opcion) {
             case 1:
                 printf("Cual es el valor del elemento: ");
-                scanf("i%", &valor);
+                scanf("%i", &valor);
                 agregar(&lista, valor);
                 fflush(stdin);
                 if(&lista->valor != 0 || &lista->valor != valor){
@@ -93,7 +94,7 @@ int main() {
                 break;
             case 3:
                 printf("Cual es la posicion del elemento a Borrar: ");
-                scanf("i%", &valor);
+                scanf("%i", &valor);
                 BorrarXElemento(&lista, valor);
                 fflush(stdin);
                 break;
@@ -105,12 +106,14 @@ int main() {
                 break;
             case 6:
                 printf("Cual es la posicion del elemento a obtener: ");
-                scanf("i%", &valor);
+                scanf("%i", &valor);
                 obtenerElemento(lista, valor);
                 fflush(stdin);
                 break;
             case 7:
-                salir = 1;
+                break;
+            default:
+                printf("No hay ninguna operacion para el numero %i \n", opcion);
                 break;
         }
     }
