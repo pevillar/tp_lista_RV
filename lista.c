@@ -20,19 +20,20 @@ void agregar(Nodo **lista, int valor) {
             Nodo *iterador = lista;
             int cargado = 0;
             while(cargado != 1){
+                //agregar al final o medio
                 if( (iterador->siguiente == NULL && iterador->valor<valor) || iterador->siguiente->valor>valor){
                     nuevoNodo->siguiente = iterador->siguiente;
                     iterador->siguiente = nuevoNodo;
                     cargado = 1;
-                }
+                }//agregar al principio
                 else if(iterador->valor>valor){
                     nuevoNodo->siguiente = iterador;
                     lista = nuevoNodo;
                     cargado = 1;
-                }
+                }//avanzar
                 else if(iterador->siguiente->valor<valor){
                     iterador = iterador->siguiente;
-                }
+                }//se usa para saber si hay un caso no contemplado
                 else{
                     printf("Este caso para agregar no a sido contemplado");
                 }
