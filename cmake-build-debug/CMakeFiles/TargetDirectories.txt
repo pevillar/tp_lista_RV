@@ -1,0 +1,3 @@
+C:/Users/ignac/CLionProjects/tp_lista_RV/cmake-build-debug/CMakeFiles/tp_lista_RV.dir
+C:/Users/ignac/CLionProjects/tp_lista_RV/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/ignac/CLionProjects/tp_lista_RV/cmake-build-debug/CMakeFiles/rebuild_cache.dir
