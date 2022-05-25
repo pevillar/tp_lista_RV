@@ -48,7 +48,10 @@ void BorrarXElemento(Nodo *lista, int posicion) {
             nodo = nodo->siguiente;
         }
         nodo->siguiente = nodo->siguiente->siguiente;
+    }else if(posicion == 0){
+        BorrarPrimerElemento(lista);
     }
+    tamanio--;
 }
 
 void imprimir(Nodo *lista) {
@@ -58,59 +61,61 @@ void imprimir(Nodo *lista) {
     }
     printf("\n");
 }
-
 int main() {
     Nodo *lista = NULL;
 
-    int salir = 0;
     int opcion = 0;
-    int valor;
+    int valor = 0;
 
-    while (salir != 1){
+    while (opcion != 7){
         printf("elije una opcion para usar la lista: \n");
         printf("1. Cargar elemento\n");
         printf("2. Borrar primer elemento\n");
         printf("3. Borrar elemento en la posicion X\n");
         printf("4. Ver tamanio\n");
         printf("5. Imprimir Lista\n");
-        printf("6. Obtener un elemeneto de la lista\n");
+        printf("6. Obtener un elemento de la lista\n");
         printf("7. salir\n");
         scanf("%i", &opcion);
         fflush(stdin);
         switch (opcion) {
             case 1:
                 printf("Cual es el valor del elemento: ");
-                scanf("i%", &valor);
+                scanf("%i", &valor);
                 agregar(&lista, valor);
                 fflush(stdin);
                 if(&lista->valor != 0 || &lista->valor != valor){
-                    printf("\nEl elemento a sido cargardo\n");
+                    printf("\nEl elemento ha sido cargado\n");
                 }
                 break;
             case 2:
                 BorrarPrimerElemento(&lista);
-                printf("El Primer Elemento asido borrado\n");
+                printf("El primer elemento ha sido borrado\n");
                 break;
             case 3:
-                printf("Cual es la posicion del elemento a Borrar: ");
-                scanf("i%", &valor);
+                printf("Cual es la posicion del elemento a borrar: ");
+                scanf("%i", &valor);
                 BorrarXElemento(&lista, valor);
                 fflush(stdin);
                 break;
             case 4:
-                printf("El taminio de la lista actualmente es %i\n", tamanio);
+                printf("El tamanio de la lista actualmente es %i\n", tamanio);
                 break;
             case 5:
                 imprimir(lista);
                 break;
             case 6:
                 printf("Cual es la posicion del elemento a obtener: ");
-                scanf("i%", &valor);
-                obtenerElemento(lista, valor);
+                scanf("%i", &valor);
+                Nodo nodo = obtenerElemento(&lista, valor);
+                printf("El valor de la lista en la posicion %i es %i."
+                       "\n", valor, nodo.valor);
                 fflush(stdin);
                 break;
             case 7:
-                salir = 1;
+                break;
+            default:
+                printf("No hay ninguna operacion para el numero %i \n", opcion);
                 break;
         }
     }
