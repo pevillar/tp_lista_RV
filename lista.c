@@ -20,19 +20,14 @@ void agregar(Nodo **lista, int valor) {
             Nodo *iterador = lista;
             int cargado = 0;
             while(cargado != 1){
-                if(iterador->siguiente == NULL && iterador->valor<valor){
-                    nuevoNodo->siguiente = NULL;
+                if( (iterador->siguiente == NULL && iterador->valor<valor) || iterador->siguiente->valor>valor){
+                    nuevoNodo->siguiente = iterador->siguiente;
                     iterador->siguiente = nuevoNodo;
                     cargado = 1;
                 }
                 else if(iterador->valor>valor){
                     nuevoNodo->siguiente = iterador;
                     lista = nuevoNodo;
-                    cargado = 1;
-                }//se puede juntar sao 1 y 3?
-                else if(iterador->siguiente->valor>valor){
-                    nuevoNodo->siguiente = iterador->siguiente;
-                    iterador->siguiente = nuevoNodo;
                     cargado = 1;
                 }
                 else if(iterador->siguiente->valor<valor){
