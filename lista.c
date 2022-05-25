@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 
-typedef struct nombreStruct {
-    struct nombreStruct *siguiente;
+typedef struct Nodo {
+    struct Nodo *siguiente;
     int valor;
 } Nodo;
 
@@ -17,8 +17,31 @@ void agregar(Nodo **lista, int valor) {
             nuevoNodo->siguiente = NULL;
             *lista = nuevoNodo;
         }else{
-            nuevoNodo->siguiente = *lista;
-            *lista = nuevoNodo;
+            Nodo *iterador = lista;
+            int cargado = 0;
+            while(cargado != 1){
+                if(iterador->siguiente == NULL && iterador->valor<valor){
+                    nuevoNodo->siguiente = NULL;
+                    iterador->siguiente = nuevoNodo;
+                    cargado = 1;
+                }
+                else if(iterador->valor>valor){
+                    nuevoNodo->siguiente = iterador;
+                    lista = nuevoNodo;
+                    cargado = 1;
+                }//se puede juntar sao 1 y 3?
+                else if(iterador->siguiente->valor>valor){
+                    nuevoNodo->siguiente = iterador->siguiente;
+                    iterador->siguiente = nuevoNodo;
+                    cargado = 1;
+                }
+                else if(iterador->siguiente->valor<valor){
+                    iterador = iterador->siguiente;
+                }
+                else{
+                    printf("Este caso para agregar no a sido contemplado");
+                }
+            }
         }
         tamanio++;
     }
@@ -65,9 +88,11 @@ int main() {
     Nodo *lista = NULL;
 
     int opcion = 0;
-    int valor = 0;
+    int valor;
 
-    while (opcion != 7){
+    Nodo nodoRecuperado;
+
+    /*while (opcion != 7){
         printf("elije una opcion para usar la lista: \n");
         printf("1. Cargar elemento\n");
         printf("2. Borrar primer elemento\n");
@@ -107,7 +132,8 @@ int main() {
             case 6:
                 printf("Cual es la posicion del elemento a obtener: ");
                 scanf("%i", &valor);
-                obtenerElemento(lista, valor);
+                nodoRecuperado = obtenerElemento(lista, valor);
+                printf("el valor del nodo es de %i \n", nodoRecuperado.valor);
                 fflush(stdin);
                 break;
             case 7:
@@ -116,17 +142,17 @@ int main() {
                 printf("No hay ninguna operacion para el numero %i \n", opcion);
                 break;
         }
-    }
+    }*/
 
 
 
-    /*
+
     BorrarPrimerElemento(&lista);
     imprimir(lista);
-    agregar(&lista, 1);
-    agregar(&lista, 5);
+    agregar(&lista, 4);
     agregar(&lista, 6);
-    agregar(&lista, 7);
+    agregar(&lista, 5);
+    agregar(&lista, 3);
     agregar(&lista, 8);
     imprimir(lista);
     printf("el tamanio de la lista es de %i \n", tamanio);
@@ -134,8 +160,9 @@ int main() {
     imprimir(lista);
     printf("el tamanio de la lista es de %i \n", tamanio);
     Nodo nodo = obtenerElemento(2,lista);
-    printf("el valor de la lista en la posicion 3 es %i.\n",nodo.valor);
+    printf("el valor de la lista en la posicion 3 es %i.\n",nodo.valor);//problemas con el valor
+    imprimir(lista);
     BorrarXElemento(&lista, 2);
-    imprimir(lista);*/
+    imprimir(lista);
     return 0;
 }
