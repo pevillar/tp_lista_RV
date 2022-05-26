@@ -9,6 +9,11 @@ typedef struct nombreStruct {
 
 int tamanio = 0;
 
+/**
+ * Agrega un nuevo elemento de tipo 'Nodo' a la lista.
+ * @param lista
+ * @param valor
+ */
 void agregar(Nodo **lista, int valor) {
     if(valor != NULL){
         Nodo *nuevoNodo = malloc(sizeof(Nodo));
@@ -24,32 +29,44 @@ void agregar(Nodo **lista, int valor) {
     }
 }
 
-Nodo obtenerElemento(Nodo *lista, int posicion){
-    Nodo *nodo = lista;
-    if(posicion>0 && posicion<tamanio){
-        for (int i = 0; i < posicion; ++i) {
+/**
+ * Se obtiene el elemento en la posicion pasada como parametro.
+ * @param lista
+ * @param posicion: debe estar entre los valores 1 y 'tamanio' de la lista
+ * @return: nodo en la posicion (parametro)
+ */
+Nodo obtenerElemento(Nodo **lista, int posicion){
+    Nodo *nodo = *lista;
+    if(posicion>0 && posicion<=tamanio){
+        for (int i = 0; i < (posicion - 1); ++i) {
             nodo = nodo->siguiente;
         }
         return *nodo;
     }
 }
 
-void BorrarPrimerElemento(Nodo *lista) {
+void borrarPrimerElemento(Nodo *lista) {
     if (lista->siguiente != NULL) {
         *lista = *lista->siguiente;
         tamanio--;
     }
 }
 
-void BorrarXElemento(Nodo *lista, int posicion) {
+/**
+ * Elimina el elemento en la posicion pasada como parametro
+ * @param lista
+ * @param posicion: entre los valores 1 y 'tamanio' de lista
+ */
+void borrarXElemento(Nodo *lista, int posicion) {
     Nodo *nodo = lista;
-    if(posicion>0 && posicion<tamanio){
-        for (int i = 0; i < posicion; ++i) {
+    Nodo *aEliminar;
+    if(posicion>0 && posicion<=tamanio){
+        for (int i = 0; i < (posicion - 1); ++i) {
             nodo = nodo->siguiente;
         }
+        aEliminar = nodo->siguiente;
         nodo->siguiente = nodo->siguiente->siguiente;
-    }else if(posicion == 0){
-        BorrarPrimerElemento(lista);
+        free(aEliminar);
     }
     tamanio--;
 }
@@ -89,13 +106,13 @@ int main() {
                 }
                 break;
             case 2:
-                BorrarPrimerElemento(&lista);
+                borrarPrimerElemento(&lista);
                 printf("El primer elemento ha sido borrado\n");
                 break;
             case 3:
                 printf("Cual es la posicion del elemento a borrar: ");
                 scanf("%i", &valor);
-                BorrarXElemento(&lista, valor);
+                borrarXElemento(&lista, valor);
                 fflush(stdin);
                 break;
             case 4:
@@ -132,12 +149,12 @@ int main() {
     agregar(&lista, 8);
     imprimir(lista);
     printf("el tamanio de la lista es de %i \n", tamanio);
-    BorrarPrimerElemento(&lista);
+    borrarPrimerElemento(&lista);
     imprimir(lista);
     printf("el tamanio de la lista es de %i \n", tamanio);
     Nodo nodo = obtenerElemento(2,lista);
     printf("el valor de la lista en la posicion 3 es %i.\n",nodo.valor);
-    BorrarXElemento(&lista, 2);
+    borrarXElemento(&lista, 2);
     imprimir(lista);*/
     return 0;
 }
