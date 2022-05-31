@@ -62,11 +62,18 @@ Nodo obtenerElemento(Nodo **lista, int posicion){
     }
 }
 
-void borrarPrimerElemento(Nodo *lista) {
-    if (lista->siguiente != NULL) {
-        *lista = *lista->siguiente;
-        tamanio--;
+/**
+ * Se obtiene el elemento con el valor pasado como parametro.
+ * @param lista
+ * @param valor: valor del nodo a buscar.
+ * @return: nodo en la posicion (parametro)
+ */
+Nodo obtenerElementoPorValor(Nodo **lista, int valor){
+    Nodo *nodo = *lista;
+    while(nodo->valor != valor){
+        nodo = nodo->siguiente;
     }
+    return *nodo;
 }
 
 /**
@@ -102,7 +109,7 @@ int main(){
 
     int opcion = 0;
     int valor = 0;
-
+/*
     while (opcion != 7){
         printf("elije una opcion para usar la lista: \n");
         printf("1. Cargar elemento\n");
@@ -154,8 +161,8 @@ int main(){
                 printf("No hay ninguna operacion para el numero %i \n", opcion);
                 break;
         }
-    }
-/*
+    }*/
+
     printf("1era impresion, lista vacia: ");
     imprimir(lista);
     agregar(&lista, 1);
@@ -175,9 +182,9 @@ int main(){
     imprimir(lista);
     printf("El tamanio de la lista es de %i \n", tamanio);
 
-    borrarPrimerElemento(&lista);
-    printf("4ta impresion, borrando primer elemento: ");
-    imprimir(lista);
+    //borrarPrimerElemento(&lista);
+    //printf("4ta impresion, borrando primer elemento: ");
+    //imprimir(lista);
 
     printf("Obtener elemento: ");
     Nodo nodo = obtenerElemento(&lista,5);
@@ -202,6 +209,9 @@ int main(){
     agregar(&lista, 10);
     printf("8va impresion agregando 10: ");
     imprimir(lista);
-*/
+
+    Nodo nodo2 = obtenerElementoPorValor(&lista, 10);
+    printf("el valor de la lista con valor 10 es %i \n", nodo2.valor);
+
     return 0;
 }
