@@ -8,3 +8,6 @@ add_executable(lista
 
 add_executable(listaOrdenada
         listaOrdenada.c)
+
+add_executable(estudiante
+        estudiante.c)

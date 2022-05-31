@@ -121,10 +121,10 @@ void imprimir(Estudiante *lista) {
 
 int main(){
     Estudiante *lista = NULL;
-
+/*
     int opcion = 0;
     int valor = 0;
-/*
+
     while (opcion != 7){
         printf("elije una opcion para usar la lista: \n");
         printf("1. Cargar elemento\n");
