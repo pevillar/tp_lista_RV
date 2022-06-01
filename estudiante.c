@@ -17,8 +17,8 @@ typedef struct Estudiante {
     struct Estudiante *siguiente;
     int dni;
     char nombre[50];
-    int valor;
-    time_t fechaDeNacimiento;
+    int edad;
+    char fechaDeNacimiento;
 
 } Estudiante;
 
@@ -33,6 +33,7 @@ int tamanio = 0;
 Estudiante *crearNodo(int dni){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
     estudiante->dni = dni;
+    estudiante->edad = dni;
     estudiante->siguiente = NULL;
     return estudiante;
 }
@@ -41,16 +42,16 @@ Estudiante *crearNodo(int dni){
  * Agrega un nuevo elemento de tipo 'Nodo' a la lista ordenado de forma
  * creciente segun su valor introducido.
  * @param lista
- * @param valor
+ * @param edad
  */
-void agregar(Estudiante **lista, int valor){
-    Estudiante *nuevoEstudiante = crearNodo(valor);
+void agregar(Estudiante **lista, int edad){
+    Estudiante *nuevoEstudiante = crearNodo(edad);
     Estudiante *cursor = *lista;
-    if ((cursor == NULL) || (valor < cursor->valor)){
+    if ((cursor == NULL) || (edad < cursor->edad)){
         nuevoEstudiante->siguiente = *lista;
         *lista = nuevoEstudiante;
     } else {
-        while ((cursor->siguiente != NULL) && (valor > cursor->siguiente->valor)){
+        while ((cursor->siguiente != NULL) && (edad > cursor->siguiente->edad)){
             cursor = cursor->siguiente;
         }
         if (cursor->siguiente != NULL){
@@ -85,7 +86,7 @@ Estudiante obtenerElemento(Estudiante **lista, int posicion){
  */
 Estudiante obtenerElementoPorValor(Estudiante **lista, int valor){
     Estudiante *estudiante = *lista;
-    while(estudiante->valor != valor){
+    while(estudiante->edad != valor){
         estudiante = estudiante->siguiente;
     }
     return *estudiante;
@@ -112,7 +113,7 @@ void borrarXElemento(Estudiante *lista, int posicion) {
 
 void imprimir(Estudiante *lista) {
     while (lista != NULL) {
-        printf("%d - ", lista->valor);
+        printf("%d - ", lista->edad);
         lista = lista->siguiente;
     }
     printf("\n");
@@ -203,7 +204,7 @@ int main(){
 
     printf("Obtener elemento: ");
     Estudiante estu = obtenerElemento(&lista,5);
-    printf("el valor de la lista en la posicion 5 es %i.\n",estu.valor);
+    printf("el valor de la lista en la posicion 5 es %i.\n",estu.edad);
     printf("5ta impresion, con valor obtenido: ");
     imprimir(lista);
     printf("Obtener elemento fuera de rango: ");
@@ -216,7 +217,7 @@ int main(){
 
     printf("El tamanio de la lista es de %i \n", tamanio);
     Estudiante estu1 = obtenerElemento(&lista,2);
-    printf("El valor de la lista en la posicion 2 es %i.\n",estu1.valor);
+    printf("El valor de la lista en la posicion 2 es %i.\n",estu1.edad);
     borrarXElemento(&lista, 6);
     printf("7ma impresion borrando 6: ");
     imprimir(lista);
@@ -226,7 +227,7 @@ int main(){
     imprimir(lista);
 
     Estudiante estu2 = obtenerElementoPorValor(&lista, 10);
-    printf("el valor de la lista con valor 10 es %i \n", estu2.valor);
+    printf("el valor de la lista con valor 10 es %i \n", estu2.edad);
 
     return 0;
 }

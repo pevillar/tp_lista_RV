@@ -11,3 +11,6 @@ add_executable(listaOrdenada
 
 add_executable(estudiante
         estudiante.c)
+
+add_executable(prueba
+        prueba.c)
