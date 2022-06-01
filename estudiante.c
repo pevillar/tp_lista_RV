@@ -18,7 +18,7 @@ typedef struct Estudiante {
     int dni;
     char nombre[50];
     int edad;
-    char fechaDeNacimiento;
+    char fechaDeNacimiento[50];
 
 } Estudiante;
 
@@ -30,7 +30,7 @@ int tamanio = 0;
  * @param valor
  * @return
  */
-Estudiante *crearNodo(int dni){
+Estudiante *crearNodo(char nombre[], int edad, int dni, char nacimiento[]){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
     estudiante->dni = dni;
     estudiante->edad = dni;
@@ -44,7 +44,9 @@ Estudiante *crearNodo(int dni){
  * @param lista
  * @param edad
  */
-void agregar(Estudiante **lista, int edad){
+void agregar(Estudiante **lista, int anio, int mes, int dia){
+    //int edad = 2022-anio;
+    //char nacimiento[50] = "dia-mes-anio";
     Estudiante *nuevoEstudiante = crearNodo(edad);
     Estudiante *cursor = *lista;
     if ((cursor == NULL) || (edad < cursor->edad)){
