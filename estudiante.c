@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /*
  * Estudiante:
@@ -16,13 +17,19 @@
 typedef struct Estudiante {
     struct Estudiante *siguiente;
     int dni;
-    char nombre[50];
+    char* nombre;
     int edad;
-    char fechaDeNacimiento[50];
+    char* fechaDeNacimiento;
 
 } Estudiante;
 
 int tamanio = 0;
+
+int ComprobarDni(int *dni);
+int lenInt(int dni);
+int comprobarNacimiento(int *anio, int *mes, int *dia);
+int comprobarDia(int *mes, int *dia, int *anio);
+int bisiento(int *anio);
 
 /**
  * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
@@ -30,12 +37,51 @@ int tamanio = 0;
  * @param valor
  * @return
  */
-Estudiante *crearNodo(char nombre[], int edad, int dni, char nacimiento[]){
+Estudiante *crearEstudiante(char* nombre, int edad, int dni, char* nacimiento){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
+    estudiante->nombre = nombre;
+    estudiante->edad = edad;
     estudiante->dni = dni;
-    estudiante->edad = dni;
+    estudiante->fechaDeNacimiento = nacimiento;
     estudiante->siguiente = NULL;
     return estudiante;
+}
+
+int ComprobarDni(int *dni) {
+    //lenInt devuelve 1 si el numero es negativo
+    if(lenInt(*dni) == 8){
+        return 1;
+    }
+    printf("el dni tiene un valor invalido\n ingrese el dni: ");
+    scanf("%i", dni);
+    return 0;
+}
+//no se usa un puntero devido a que el valor del entero se va cambiando para encontra el len
+int lenInt(int integer){
+    int count = 0;
+    while(integer>10){
+        integer /= 10;
+        count++;
+    }
+    count ++;
+    return count;
+}
+
+
+const char* obtenerNacimiento( int *anio, int *mes, int *dia){
+    char* nacimiento = (char*)calloc(10,sizeof(char));
+    char year[5];
+    char day[2];
+    char month[2];
+    sprintf(day, "%i", *dia);
+    strcat(nacimiento, day);
+    strcat(nacimiento, "-");
+    sprintf(month, "%i", *mes);
+    strcat(nacimiento, month);
+    strcat(nacimiento, "-");
+    sprintf(year, "%i", *anio);
+    strcat(nacimiento,year);
+    return nacimiento;
 }
 
 /**
@@ -44,11 +90,16 @@ Estudiante *crearNodo(char nombre[], int edad, int dni, char nacimiento[]){
  * @param lista
  * @param edad
  */
-void agregar(Estudiante **lista, int anio, int mes, int dia){
-    //int edad = 2022-anio;
-    //char nacimiento[50] = "dia-mes-anio";
-    Estudiante *nuevoEstudiante = crearNodo(edad);
+void agregar(Estudiante **lista, char* nombre,  int anio, int mes, int dia, int dni){
+    //juntar comprobaciones de nacimiento y dni cuando funcione
+    while(comprobarNacimiento(&anio, &mes, &dia)==0);
+    while(ComprobarDni(&dni) == 0);
+    char *nacimiento = obtenerNacimiento(&anio, &mes, &dia);
+    time_t fecha = time(NULL);
+    int edad = (localtime(&fecha)->tm_year)+1900-anio;
+    Estudiante *nuevoEstudiante = crearEstudiante(nombre, edad, dni, nacimiento);
     Estudiante *cursor = *lista;
+
     if ((cursor == NULL) || (edad < cursor->edad)){
         nuevoEstudiante->siguiente = *lista;
         *lista = nuevoEstudiante;
@@ -62,6 +113,47 @@ void agregar(Estudiante **lista, int anio, int mes, int dia){
         cursor->siguiente = nuevoEstudiante;
     }
     tamanio++;
+}
+
+int comprobarNacimiento(int *anio, int *mes, int *dia) {
+    if(*anio<1950 || *anio>2004){
+        printf("El a%co esta mal escrito", 164 );
+        scanf("%i", anio);
+        return 0;
+    }
+    if(*mes<=0 || *mes>12){
+        printf("El mes esta mal escrito");
+        scanf("%i", mes);
+        return 0;
+    }
+    if(comprobarDia(mes,dia,anio) == 0){
+        printf("El dia esta mal escrito");
+        scanf("%i", dia);
+        return 0;
+    }
+    return 1;
+}
+
+int comprobarDia(int *mes, int *dia, int *anio) {
+    if(*mes == 2 && *dia<=28){
+        return 1;
+    }else if(*mes == 2 && *dia == 29 && bisiento(anio) == 1){
+        return 1;
+    }
+    if((*mes == 4 || *mes == 6 || *mes == 9 || *mes == 11) && *dia <= 30){
+        return 1;
+    }
+    if((*mes == 1 || *mes == 3 || *mes == 5 || *mes == 7 || *mes == 8 || *mes == 10 || *mes == 12) && *dia <= 31){
+        return 1;
+    }
+    return 0;
+}
+int bisiento(int *anio){
+    if ( *anio % 4 == 0 && *anio % 100 != 0 || *anio % 400 == 0 )  {
+        return 1;
+    }else{
+        return 0;
+    }
 }
 
 /**
@@ -111,6 +203,13 @@ void borrarXElemento(Estudiante *lista, int posicion) {
         free(aEliminar);
     }
     tamanio--;
+}
+
+void imprimirEstudiante(Estudiante *lista){
+    printf("\nNombre: %s\n", lista->nombre);
+    printf("edad: %i\n", lista->edad);
+    printf("dni: %i\n", lista->dni);
+    printf("fecha de nacimiento: %s\n", lista->fechaDeNacimiento);
 }
 
 void imprimir(Estudiante *lista) {
@@ -180,11 +279,12 @@ int main(){
                 break;
         }
     }*/
-
+//agregar(Estudiante **lista, char* nombre,  int anio, int mes, int dia, int dni)
     printf("1era impresion, lista vacia: ");
     imprimir(lista);
-    agregar(&lista, 1);
-    agregar(&lista, 8);
+    agregar(&lista, "Juan", 2001, 12, 4, 43870524);
+    imprimirEstudiante(lista);
+    /*agregar(&lista, 8);
     agregar(&lista, 2);
     agregar(&lista, 4);
     agregar(&lista, 3);
@@ -229,7 +329,7 @@ int main(){
     imprimir(lista);
 
     Estudiante estu2 = obtenerElementoPorValor(&lista, 10);
-    printf("el valor de la lista con valor 10 es %i \n", estu2.edad);
+    printf("el valor de la lista con valor 10 es %i \n", estu2.edad);*/
 
     return 0;
 }
