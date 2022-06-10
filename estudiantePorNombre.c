@@ -64,7 +64,7 @@ void agregarPorNombre(EstudiantePorNombre **lista, char *apellido, char *nombre,
         *lista = nuevoEstudiante;
     } else {
         while ((cursor->siguiente != NULL) &&
-        (compararNombreCompleto(nuevoEstudiante, cursor) > 0)){
+        (compararNombreCompleto(nuevoEstudiante, cursor->siguiente) > 0)){
             cursor = cursor->siguiente;
         }
         if (cursor->siguiente != NULL){
@@ -121,6 +121,16 @@ EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **lista, c
     return estudiante;
 }
 
+void borrarPrimerEstudiante(EstudiantePorNombre *lista) {
+    if (lista->siguiente != NULL) {
+        *lista = *lista->siguiente;
+        tamanio--;
+    } else {
+        lista = NULL;
+        tamanio--;
+    }
+}
+
 /**
  * Elimina el estudiante en la posicion pasada como parametro
  * @param lista
@@ -129,8 +139,10 @@ EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **lista, c
 void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
     EstudiantePorNombre *estudiante = lista;
     EstudiantePorNombre *aEliminar;
-    if(posicion>0 && posicion<=tamanio){
-        for (int i = 0; i < (posicion - 1); ++i) {
+    if ((posicion - 1) == 0) {
+        borrarPrimerEstudiante(lista);
+    } else if(posicion>0 && posicion<=tamanio){
+        for (int i = 0; i < (posicion - 2); ++i) {
             estudiante = estudiante->siguiente;
         }
         aEliminar = estudiante->siguiente;
@@ -141,26 +153,35 @@ void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
 }
 
 void borrarEstudiantePorNombre(EstudiantePorNombre *lista, char *nombre) {
-    EstudiantePorNombre *estudiante = lista;
-    EstudiantePorNombre *aEliminar;
-    while(strcmp(estudiante->nombre, nombre) != 0){
-        estudiante = estudiante->siguiente;
+    if (strcmp(lista->nombre, nombre) == 0){
+        borrarPrimerEstudiante(lista);
+    } else {
+        EstudiantePorNombre *estudiante = lista;
+        EstudiantePorNombre *aEliminar;
+        while(strcmp(estudiante->siguiente->nombre, nombre) != 0){
+            estudiante = estudiante->siguiente;
+        }
+        aEliminar = estudiante->siguiente;
+        estudiante->siguiente = estudiante->siguiente->siguiente;
+        free(aEliminar);
+        tamanio--;
     }
-    aEliminar = estudiante->siguiente;
-    estudiante->siguiente = estudiante->siguiente->siguiente;
-    free(aEliminar);
-    tamanio--;
+}
 
-}void borrarEstudiantePorApellido(EstudiantePorNombre *lista, char *apellido) {
-    EstudiantePorNombre *estudiante = lista;
-    EstudiantePorNombre *aEliminar;
-    while(strcmp(estudiante->apellido, apellido) != 0){
-        estudiante = estudiante->siguiente;
+void borrarEstudiantePorApellido(EstudiantePorNombre *lista, char *apellido) {
+    if (strcmp(lista->apellido, apellido) == 0) {
+        borrarPrimerEstudiante(lista);
+    } else {
+        EstudiantePorNombre *estudiante = lista;
+        EstudiantePorNombre *aEliminar;
+        while(strcmp(estudiante->siguiente->apellido, apellido) != 0){
+            estudiante = estudiante->siguiente;
+        }
+        aEliminar = estudiante->siguiente;
+        estudiante->siguiente = estudiante->siguiente->siguiente;
+        free(aEliminar);
+        tamanio--;
     }
-    aEliminar = estudiante->siguiente;
-    estudiante->siguiente = estudiante->siguiente->siguiente;
-    free(aEliminar);
-    tamanio--;
 }
 
 void imprimirListaPorNombre(EstudiantePorNombre *lista) {
@@ -183,37 +204,39 @@ int main(){
     char *apellido3 = "Hughens";
     char *nombre4 = "Laura";
     char *apellido4 = "Gascon";
-
-//    EstudiantePorNombre *fab = crearNodo(nombre, apellido, 46258741);
-//    EstudiantePorNombre *gon = crearNodo(nombre2, apellido2, 46358741);
-//
-//    printf("%s, %s y %s, %s.",
-//           fab->apellido, fab->nombre, gon->apellido, gon->nombre);
+    char *nombre5 = "Marta";
+    char *apellido5 = "Suarez";
 
     agregarPorNombre(&lista, apellido, nombre, 46258741);
     agregarPorNombre(&lista, apellido2, nombre2, 46259741);
     agregarPorNombre(&lista, apellido3, nombre3, 40654789);
     agregarPorNombre(&lista, apellido4, nombre4, 50789214);
+    agregarPorNombre(&lista, apellido5, nombre5, 30789214);
 
     imprimirListaPorNombre(lista);
 
-    EstudiantePorNombre *estudianteP = obtenerEstudiante(&lista, 3);
-    printf("Obtener estudiante en la posicion 3: %s, %s.\n",
+    EstudiantePorNombre *estudianteP = obtenerEstudiante(&lista, 1);
+    printf("Obtener estudiante en la posicion 1: %s, %s.\n",
            estudianteP->apellido, estudianteP->nombre);
 
     estudianteP = obtenerEstudiantePorNombre(&lista, "Gabriela");
     printf("Obtener un estudiante por nombre 'Gabriela' : %s, %s.\n",
            estudianteP->apellido, estudianteP->nombre);
 
-    estudianteP = obtenerEstudiantePorApellido(&lista, "Gascon");
-    printf("Obtener un estudiante por apellido 'Gascon' : %s, %s.\n",
+    estudianteP = obtenerEstudiantePorApellido(&lista, "Suarez");
+    printf("Obtener un estudiante por apellido 'Suarez' : %s, %s.\n",
            estudianteP->apellido, estudianteP->nombre);
 
-    printf("Imprimir todos los 4 estudiantes.\n");
+    printf("Imprimir todos los 5 estudiantes.\n");
     imprimirListaPorNombre(lista);
+
+    borrarPrimerEstudiante(lista);
+    printf("Imprimir sin el primer estudiante:\n");
+    imprimirListaPorNombre(lista);
+
 //aca empiezan los problemas
-    borrarEstudiantePorPosicion(lista, 1);
-    printf("Imprimir estudiantes menos posicicion 1:\n");
+    borrarEstudiantePorPosicion(lista, 2);
+    printf("Imprimir estudiantes menos posicion 2:\n");
     imprimirListaPorNombre(lista);
 
     borrarEstudiantePorNombre(lista, "Gabriela");
@@ -224,6 +247,7 @@ int main(){
     printf("Imprimir estudiantes menos Fabricio\n");
     imprimirListaPorNombre(lista);
 
+    printf("El tamanio es: %d", tamanio);
 
 
 /*
@@ -282,56 +306,6 @@ int main(){
                 break;
         }
     }*/
-
-//    printf("1era impresion, lista vacia: ");
-//    imprimirListaPorNombre(lista);
-//    agregarPorNombre(&lista, 1);
-//    agregarPorNombre(&lista, 8);
-//    agregarPorNombre(&lista, 2);
-//    agregarPorNombre(&lista, 4);
-//    agregarPorNombre(&lista, 3);
-//    agregarPorNombre(&lista, 5);
-//
-//    printf("2da impresion, lista con 6 elementos: ");
-//    imprimirListaPorNombre(lista);
-//    printf("El tamanio de la lista es de %i \n", tamanio);
-//    agregarPorNombre(&lista, 7);
-//    agregarPorNombre(&lista, 6);
-//
-//    printf("3era impresion, lista de 1 a 8: ");
-//    imprimirListaPorNombre(lista);
-//    printf("El tamanio de la lista es de %i \n", tamanio);
-//
-//    //borrarPrimerElemento(&lista);
-//    //printf("4ta impresion, borrando primer elemento: ");
-//    //imprimirListaPorNombre(lista);
-//
-//    printf("Obtener elemento: ");
-//    EstudiantePorNombre estu = obtenerElemento(&lista, 5);
-//    printf("el valor de la lista en la posicion 5 es %i.\n",estu.edad);
-//    printf("5ta impresion, con valor obtenido: ");
-//    imprimirListaPorNombre(lista);
-//    printf("Obtener elemento fuera de rango: ");
-//    estu = obtenerElemento(&lista,7);
-//    printf("el valor de la lista en la posicion 5 es %i.\n",estu);
-//
-//    agregarPorNombre(&lista, 1);
-//    printf("6ta impresion agregando 1: ");
-//    imprimirListaPorNombre(lista);
-//
-//    printf("El tamanio de la lista es de %i \n", tamanio);
-//    EstudiantePorNombre estu1 = obtenerElemento(&lista, 2);
-//    printf("El valor de la lista en la posicion 2 es %i.\n",estu1.edad);
-//    borrarXElemento(&lista, 6);
-//    printf("7ma impresion borrando 6: ");
-//    imprimirListaPorNombre(lista);
-//
-//    agregarPorNombre(&lista, 10);
-//    printf("8va impresion agregando 10: ");
-//    imprimirListaPorNombre(lista);
-//
-//    EstudiantePorNombre estu2 = obtenerElementoPorNombre(&lista, 10);
-//    printf("el valor de la lista con valor 10 es %i \n", estu2.edad);
 
     return 0;
 }
