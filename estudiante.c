@@ -30,6 +30,8 @@ int lenInt(int dni);
 int comprobarNacimiento(int *anio, int *mes, int *dia);
 int comprobarDia(int *mes, int *dia, int *anio);
 int bisiento(int *anio);
+void imprimirEstudiante(Estudiante *estudiante);
+
 
 /**
  * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
@@ -68,7 +70,7 @@ int lenInt(int integer){
 }
 
 
-const char* obtenerNacimiento( int *anio, int *mes, int *dia){
+char* obtenerNacimiento( int *anio, int *mes, int *dia){
     char* nacimiento = (char*)calloc(10,sizeof(char));
     char year[5];
     char day[2];
@@ -173,17 +175,48 @@ Estudiante obtenerElemento(Estudiante **lista, int posicion){
 }
 
 /**
- * Se obtiene el elemento con el valor pasado como parametro.
+ * Se obtiene el estudiante con la edad pasada como parametro.
  * @param lista
- * @param valor: valor del nodo a buscar.
+ * @param edad: edad del estudiante a buscar.
  * @return: nodo en la posicion (parametro)
  */
-Estudiante obtenerElementoPorValor(Estudiante **lista, int valor){
+Estudiante *obtenerEstudiantePorEdad(Estudiante **lista, int edad){
     Estudiante *estudiante = *lista;
-    while(estudiante->edad != valor){
+    while(estudiante->edad != edad){
+        if(estudiante->siguiente == NULL){
+            printf("No se encontro al estudiante\n");
+            estudiante = NULL;
+            break;
+        }
         estudiante = estudiante->siguiente;
     }
-    return *estudiante;
+    return estudiante;
+}
+
+/**
+ * Se obtiene el elemento con el edad pasado como parametro.
+ * @param lista
+ * @param edad: edad del estudiante a buscar.
+ * @return: nodo en la posicion (parametro)
+ */
+void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int edadMaxima){
+    Estudiante *estudiante = *lista;
+    while(estudiante->edad < edadMinima){
+        if(estudiante->siguiente == NULL){
+            printf("No se encontro un estud    iante en este rango\n");
+            estudiante = NULL;
+            break;
+        }
+        estudiante = estudiante->siguiente;
+    }
+     while(estudiante->edad <= edadMaxima){
+         imprimirEstudiante(estudiante);
+         printf("\n\n");
+         if(estudiante->siguiente == NULL){
+             break;
+         }
+         estudiante = estudiante->siguiente;
+     }
 }
 
 /**
@@ -205,16 +238,16 @@ void borrarXElemento(Estudiante *lista, int posicion) {
     tamanio--;
 }
 
-void imprimirEstudiante(Estudiante *lista){
-    printf("\nNombre: %s\n", lista->nombre);
-    printf("edad: %i\n", lista->edad);
-    printf("dni: %i\n", lista->dni);
-    printf("fecha de nacimiento: %s\n", lista->fechaDeNacimiento);
+void imprimirEstudiante(Estudiante *estudiante){
+    printf("\nNombre: %s\n", estudiante->nombre);
+    printf("edad: %i\n", estudiante->edad);
+    printf("dni: %i\n", estudiante->dni);
+    printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
 }
 
 void imprimir(Estudiante *lista) {
     while (lista != NULL) {
-        printf("%d - ", lista->edad);
+        imprimirEstudiante(lista);
         lista = lista->siguiente;
     }
     printf("\n");
@@ -282,8 +315,20 @@ int main(){
 //agregar(Estudiante **lista, char* nombre,  int anio, int mes, int dia, int dni)
     printf("1era impresion, lista vacia: ");
     imprimir(lista);
-    agregar(&lista, "Juan", 2001, 12, 4, 43870524);
+    agregar(&lista, "Miguel", 2001, 12, 4, 43870524);
+    agregar(&lista, "Antonio", 2002, 12, 4, 43870544);
+    agregar(&lista, "Alberto", 1971, 12, 4, 43870544);
+    agregar(&lista, "Laura", 2000, 8, 4, 43870544);
+    agregar(&lista, "Ramiro", 1999, 12, 4, 43870544);
+    agregar(&lista, "Antonela", 2000, 12, 4, 43870544);
     imprimirEstudiante(lista);
+    Estudiante* juan = obtenerEstudiantePorEdad(&lista, 22);
+    if(juan != NULL){
+        printf("el nombre de %s tiene 22 a%cos.\n\n\n",juan->nombre, 164 );
+    }
+    obtenerEstudiantePorRangoDeEdad(&lista, 21, 50);
+    printf("-------------------------------");
+    imprimir(lista);
     /*agregar(&lista, 8);
     agregar(&lista, 2);
     agregar(&lista, 4);
@@ -328,7 +373,7 @@ int main(){
     printf("8va impresion agregando 10: ");
     imprimir(lista);
 
-    Estudiante estu2 = obtenerElementoPorValor(&lista, 10);
+    Estudiante estu2 = obtenerEstudiantePorEdad(&lista, 10);
     printf("el valor de la lista con valor 10 es %i \n", estu2.edad);*/
 
     return 0;
