@@ -46,6 +46,9 @@ int main(){
 
     darDeAltaEstudiante(&lista, &listaNombre, "Pepito", "Guzman", 1989, 10, 5, 45786812);
     darDeAltaEstudiante(&lista,&listaNombre, "Jorge", "Fiel", 1987, 10, 5, 49689238);
+    darDeAltaEstudiante(&lista,&listaNombre, "Julio", "Fiel", 1987, 10, 5, 49689248);
+    darDeAltaEstudiante(&lista,&listaNombre, "Abril", "Gomez", 1987, 10, 5, 49689258);
+    darDeAltaEstudiante(&lista,&listaNombre, "Azul", "Perez", 1987, 10, 5, 49689268);
     darDeAltaEstudiante(&lista,&listaNombre, "Maria", "Munoz", 1999, 10, 5, 49789823);
     darDeAltaEstudiante(&lista,&listaNombre, "Rocio", "Rodriguez", 2004, 10, 5, 49768923);
 
@@ -55,6 +58,7 @@ int main(){
     printf("Rodriguez: %s\n", estPrueba->nombre);
 
     buscarEstudiantePorRangoEdad(&lista, 22, 34);
+    printf("El estudiante %s %s fue encontrado\n", obtenerEstudiantePorEdad(&lista, 35,49689258 )->nombre,obtenerEstudiantePorEdad(&lista, 35,49689258 )->apellido);
     obtenerCantidadDeEstudiantes();
 
     imprimirEstudiantes(lista);

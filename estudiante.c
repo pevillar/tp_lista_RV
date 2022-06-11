@@ -172,9 +172,17 @@ Estudiante obtenerEstudiante(Estudiante **lista, int posicion){
  * @param edad: edad del estudiante a buscar.
  * @return: nodo en la posicion (parametro)
  */
-Estudiante *obtenerEstudiantePorEdad(Estudiante **lista, int edad){
+Estudiante *obtenerEstudiantePorEdad(Estudiante **lista, int edad, int dni){
     Estudiante *estudiante = *lista;
     while(estudiante->edad != edad){
+        if(estudiante->siguiente == NULL){
+            printf("No se encontro al estudiante\n");
+            estudiante = NULL;
+            break;
+        }
+        estudiante = estudiante->siguiente;
+    }
+    while(estudiante->edad == edad && estudiante->dni != dni){
         if(estudiante->siguiente == NULL){
             printf("No se encontro al estudiante\n");
             estudiante = NULL;
