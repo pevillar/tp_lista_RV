@@ -238,6 +238,40 @@ void borrarXEstudiante(Estudiante *lista, int posicion) {
     tamanio--;
 }
 
+/**
+ * Elimina el elemento en la posicion pasada como parametro
+ * @param lista
+ * @param posicion: entre los valores 1 y 'tamanio' de lista
+ */
+void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
+    Estudiante *estudiante = lista;
+    Estudiante *aEliminar;
+    while(estudiante->siguiente->edad<edad){
+        if(estudiante->siguiente == NULL){
+            printf("No se encontro al estudiante\n");
+            break;
+        }
+        estudiante = estudiante->siguiente;
+    }
+    while(estudiante->siguiente->edad == edad && estudiante->siguiente->dni != dni){
+        if(estudiante->siguiente == NULL){
+            printf("No se encontro al estudiante\n");
+            break;
+        }
+        estudiante = estudiante->siguiente;
+    }
+    aEliminar = estudiante->siguiente;
+    estudiante->siguiente = estudiante->siguiente->siguiente;
+    free(aEliminar);
+    /*if(edad>0 && edad<=tamanio){
+        for (int i = 0; i < (edad - 1); ++i) {
+            estudiante = estudiante->siguiente;
+        }
+
+    }*/
+    tamanio--;
+}
+
 void imprimirEstudiante(Estudiante *estudiante){
     printf("\nApellido: %s\n", estudiante->apellido);
     printf("Nombre: %s\n", estudiante->nombre);

@@ -63,6 +63,12 @@ int main(){
 
     imprimirEstudiantes(lista);
 
+    borrarEstudiantePorEdad(&lista, 35, 49689258);
+
+    Estudiante *estPrueba1= obtenerEstudiantePorEdad(&lista, 35,49689258 );
+    if(estPrueba1 != NULL) {
+        printf("El estudiante %s %s fue encontrado\n",obtenerEstudiantePorEdad(&lista, 35,49689258)->nombre, obtenerEstudiantePorEdad(&lista, 35,49689258)->apellido);
+    }
 
     Materia *listaMaterias = NULL;
     cargarMateria(&listaMaterias, "Sistema De Representaciones", 1);
