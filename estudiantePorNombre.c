@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "estudiante.c"
 
 
 typedef struct EstudiantePorNombre {
     struct EstudiantePorNombre *siguiente;
-    int dni;
+    Estudiante *estudianteEdad;
     char *apellido;
     char *nombre;
 
@@ -31,11 +32,11 @@ int comprobarDni(int dni) {
  * @param
  * @return
  */
-EstudiantePorNombre *crearNodo(char *nombre, char *apellido, int dni){
+EstudiantePorNombre *crearNodo(Estudiante *estudianteEdad, char *nombre, char *apellido){
     EstudiantePorNombre *estudiante = (EstudiantePorNombre*) malloc(sizeof(EstudiantePorNombre));
+    estudiante->estudianteEdad = estudianteEdad;
     estudiante->nombre = nombre;
     estudiante->apellido = apellido;
-    estudiante->dni = dni;
     estudiante->siguiente = NULL;
     return estudiante;
 }
@@ -60,20 +61,20 @@ int compararNombreCompleto(EstudiantePorNombre *estudiante1, EstudiantePorNombre
 }
 
 /**
- * Crea y agrega un nuevo elemento de tipo 'EstudiantePorNombre' a la lista
+ * Crea y agrega un nuevo elemento de tipo 'EstudiantePorNombre' a la listaNombre
  * ordenado de forma creciente segun sus datos introducidos.
- * @param lista
+ * @param listaNombre
  * @param apellido
  * @param nombre
  * @param dni
  */
-void agregarPorNombre(EstudiantePorNombre **lista, char *apellido, char *nombre, int dni){
-    EstudiantePorNombre *nuevoEstudiante = crearNodo(nombre, apellido, dni);
-    EstudiantePorNombre *cursor = *lista;
+void agregarPorNombre(EstudiantePorNombre **listaNombre, Estudiante *estudianteEdad, char *nombre, char *apellido){
+    EstudiantePorNombre *nuevoEstudiante = crearNodo(estudianteEdad, nombre, apellido);
+    EstudiantePorNombre *cursor = *listaNombre;
     if ((cursor == NULL) ||
     (compararNombreCompleto(nuevoEstudiante, cursor) < 0)){
-        nuevoEstudiante->siguiente = *lista;
-        *lista = nuevoEstudiante;
+        nuevoEstudiante->siguiente = *listaNombre;
+        *listaNombre = nuevoEstudiante;
     } else {
         while ((cursor->siguiente != NULL) &&
         (compararNombreCompleto(nuevoEstudiante, cursor->siguiente) > 0)){
@@ -89,12 +90,12 @@ void agregarPorNombre(EstudiantePorNombre **lista, char *apellido, char *nombre,
 
 /**
  * Se obtiene el estudiante en la posicion pasada como parametro.
- * @param lista
- * @param posicion: debe estar entre los valores 1 y tamanioDeNombres de la lista
+ * @param listaNombre
+ * @param posicion: debe estar entre los valores 1 y tamanioDeNombres de la listaNombre
  * @return: nodo en la posicion
  */
-EstudiantePorNombre *obtenerEstudiante(EstudiantePorNombre **lista, int posicion){
-    EstudiantePorNombre *estudiante = *lista;
+EstudiantePorNombre *obtenerEstudiante(EstudiantePorNombre **listaNombre, int posicion){
+    EstudiantePorNombre *estudiante = *listaNombre;
     if(posicion>0 && posicion <= tamanioDeNombres){
         for (int i = 0; i < (posicion - 1); ++i) {
             estudiante = estudiante->siguiente;
@@ -104,19 +105,19 @@ EstudiantePorNombre *obtenerEstudiante(EstudiantePorNombre **lista, int posicion
 }
 
 /**
- * Se obtiene el primer estudiante en la lista con el nombre pasado como parametro.
- * @param lista
+ * Se obtiene el primer estudiante en la listaNombre con el nombre pasado como parametro.
+ * @param listaNombre
  * @param valor: valor del nodo a buscar.
  * @return: nodo en la posicion (parametro)
  */
-EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **lista, char *nombre){
-    EstudiantePorNombre *estudiante = *lista;
+EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **listaNombre, char *nombre){
+    EstudiantePorNombre *estudiante = *listaNombre;
     while((estudiante->siguiente != NULL)
     && strcmp(estudiante->nombre, nombre) != 0){
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->nombre, nombre) != 0) {
-        printf("El nombre: %s, no existe en la lista.\n", nombre);
+        printf("El nombre: %s, no existe en la listaNombre.\n", nombre);
         return NULL;
     } else {
         return estudiante;
@@ -124,47 +125,47 @@ EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **lista, cha
 }
 
 /**
- * Se obtiene el primer estudiante en la lista con el apellido pasado como
+ * Se obtiene el primer estudiante en la listaNombre con el apellido pasado como
  * parametro.
- * @param lista
+ * @param listaNombre
  * @param apellido
- * @return primer estudiante en la lista con el apellido pasado como
+ * @return primer estudiante en la listaNombre con el apellido pasado como
  * parametro.
  */
-EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **lista, char *apellido){
-    EstudiantePorNombre *estudiante = *lista;
+EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **listaNombre, char *apellido){
+    EstudiantePorNombre *estudiante = *listaNombre;
     while((estudiante->siguiente != NULL)
           && strcmp(estudiante->apellido, apellido) != 0){
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->apellido, apellido) != 0) {
-        printf("El apellido: %s, no existe en la lista.\n", apellido);
+        printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
         return NULL;
     } else {
         return estudiante;
     }
 }
 
-void borrarPrimerEstudiante(EstudiantePorNombre *lista) {
-    if (lista->siguiente != NULL) {
-        *lista = *lista->siguiente;
+void borrarPrimerEstudiante(EstudiantePorNombre *listaNombre) {
+    if (listaNombre->siguiente != NULL) {
+        *listaNombre = *listaNombre->siguiente;
         tamanioDeNombres--;
     } else {
-        lista = NULL;
+        listaNombre = NULL;
         tamanioDeNombres--;
     }
 }
 
 /**
  * Elimina el estudiante en la posicion pasada como parametro
- * @param lista
- * @param posicion: entre los valores 1 y 'tamanioDeNombres' de lista
+ * @param listaNombre
+ * @param posicion: entre los valores 1 y 'tamanioDeNombres' de listaNombre
  */
-void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
-    EstudiantePorNombre *estudiante = lista;
+void borrarEstudiantePorPosicion(EstudiantePorNombre *listaNombre, int posicion) {
+    EstudiantePorNombre *estudiante = listaNombre;
     EstudiantePorNombre *aEliminar;
     if ((posicion - 1) == 0) {
-        borrarPrimerEstudiante(lista);
+        borrarPrimerEstudiante(listaNombre);
     } else if(posicion>0 && posicion <= tamanioDeNombres){
         for (int i = 0; i < (posicion - 2); ++i) {
             estudiante = estudiante->siguiente;
@@ -176,18 +177,18 @@ void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
     tamanioDeNombres--;
 }
 
-void borrarEstudiantePorNombre(EstudiantePorNombre *lista, char *nombre) {
-    if (strcmp(lista->nombre, nombre) == 0){
-        borrarPrimerEstudiante(lista);
+void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
+    if (strcmp(listaNombre->nombre, nombre) == 0){
+        borrarPrimerEstudiante(listaNombre);
     } else {
-        EstudiantePorNombre *estudiante = lista;
+        EstudiantePorNombre *estudiante = listaNombre;
         EstudiantePorNombre *aEliminar;
         while ((estudiante->siguiente != NULL)
         && (strcmp(estudiante->siguiente->nombre, nombre) != 0)) {
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El nombre: %s, no existe en la lista.\n", nombre);
+            printf("El nombre: %s, no existe en la listaNombre.\n", nombre);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
@@ -197,18 +198,18 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *lista, char *nombre) {
     }
 }
 
-void borrarEstudiantePorApellido(EstudiantePorNombre *lista, char *apellido) {
-    if (strcmp(lista->apellido, apellido) == 0) {
-        borrarPrimerEstudiante(lista);
+void borrarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellido) {
+    if (strcmp(listaNombre->apellido, apellido) == 0) {
+        borrarPrimerEstudiante(listaNombre);
     } else {
-        EstudiantePorNombre *estudiante = lista;
+        EstudiantePorNombre *estudiante = listaNombre;
         EstudiantePorNombre *aEliminar;
         while((estudiante->siguiente != NULL)
         && (strcmp(estudiante->siguiente->apellido, apellido) != 0)){
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->apellido, apellido) != 0) {
-            printf("El apellido: %s, no existe en la lista.\n", apellido);
+            printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
@@ -218,10 +219,10 @@ void borrarEstudiantePorApellido(EstudiantePorNombre *lista, char *apellido) {
     }
 }
 
-void imprimirListaPorNombre(EstudiantePorNombre *lista) {
-    while (lista != NULL) {
-        printf("%s, %s.\n", lista->apellido, lista->nombre);
-        lista = lista->siguiente;
+void imprimirListaPorNombre(EstudiantePorNombre *listaNombre) {
+    while (listaNombre != NULL) {
+        printf("%s, %s.\n", listaNombre->apellido, listaNombre->nombre);
+        listaNombre = listaNombre->siguiente;
     }
     printf("\n");
 }

@@ -18,6 +18,7 @@ typedef struct Estudiante {
     struct Estudiante *siguiente;
     int dni;
     char* nombre;
+    char* apellido;
     int edad;
     char* fechaDeNacimiento;
 
@@ -39,9 +40,10 @@ void imprimirEstudiante(Estudiante *estudiante);
  * @param valor
  * @return
  */
-Estudiante *crearEstudiante(char* nombre, int edad, int dni, char* nacimiento){
+Estudiante *crearEstudiante(char* nombre, char* apellido, int edad, int dni, char* nacimiento){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
     estudiante->nombre = nombre;
+    estudiante->apellido = apellido;
     estudiante->edad = edad;
     estudiante->dni = dni;
     estudiante->fechaDeNacimiento = nacimiento;
@@ -92,14 +94,14 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
  * @param lista
  * @param edad
  */
-void agregar(Estudiante **lista, char* nombre,  int anio, int mes, int dia, int dni){
+Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio, int mes, int dia, int dni){
     //juntar comprobaciones de nacimiento y dni cuando funcione
     while(comprobarNacimiento(&anio, &mes, &dia)==0);
     while(ComprobarDni(&dni) == 0);
     char *nacimiento = obtenerNacimiento(&anio, &mes, &dia);
     time_t fecha = time(NULL);
     int edad = (localtime(&fecha)->tm_year)+1900-anio;
-    Estudiante *nuevoEstudiante = crearEstudiante(nombre, edad, dni, nacimiento);
+    Estudiante *nuevoEstudiante = crearEstudiante(nombre, apellido, edad, dni, nacimiento);
     Estudiante *cursor = *lista;
 
     if ((cursor == NULL) || (edad < cursor->edad)){
@@ -115,6 +117,7 @@ void agregar(Estudiante **lista, char* nombre,  int anio, int mes, int dia, int 
         cursor->siguiente = nuevoEstudiante;
     }
     tamanio++;
+    return nuevoEstudiante;
 }
 
 int comprobarNacimiento(int *anio, int *mes, int *dia) {
@@ -239,10 +242,12 @@ void borrarXElemento(Estudiante *lista, int posicion) {
 }
 
 void imprimirEstudiante(Estudiante *estudiante){
-    printf("\nNombre: %s\n", estudiante->nombre);
+    printf("\nApellido: %s\n", estudiante->apellido);
+    printf("Nombre: %s\n", estudiante->nombre);
     printf("edad: %i\n", estudiante->edad);
     printf("dni: %i\n", estudiante->dni);
     printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
+    printf("------------------------------------------");
 }
 
 void imprimir(Estudiante *lista) {
