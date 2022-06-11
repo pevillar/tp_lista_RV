@@ -11,12 +11,24 @@ typedef struct EstudiantePorNombre {
 
 } EstudiantePorNombre;
 
-int tamanio = 0;
+int tamanioDeNombres = 0;
+
+/**
+ * Comprueba que el numero de dni tenga 8 dígitos.
+ * @param dni
+ * @return
+ */
+int comprobarDni(int dni) {
+    if ((dni >= 10000000) && (dni < 100000000)) {
+        return 0;
+    }
+    return -1;
+}
 
 /**
  * Inicializa un Nodo de estudiante con sus datos pasados como parametro,
  * y 'siguiente' referenciando a 'NULL'.
- * @param valor
+ * @param
  * @return
  */
 EstudiantePorNombre *crearNodo(char *nombre, char *apellido, int dni){
@@ -72,18 +84,18 @@ void agregarPorNombre(EstudiantePorNombre **lista, char *apellido, char *nombre,
         }
         cursor->siguiente = nuevoEstudiante;
     }
-    tamanio++;
+    tamanioDeNombres++;
 }
 
 /**
  * Se obtiene el estudiante en la posicion pasada como parametro.
  * @param lista
- * @param posicion: debe estar entre los valores 1 y tamanio de la lista
+ * @param posicion: debe estar entre los valores 1 y tamanioDeNombres de la lista
  * @return: nodo en la posicion
  */
 EstudiantePorNombre *obtenerEstudiante(EstudiantePorNombre **lista, int posicion){
     EstudiantePorNombre *estudiante = *lista;
-    if(posicion>0 && posicion<=tamanio){
+    if(posicion>0 && posicion <= tamanioDeNombres){
         for (int i = 0; i < (posicion - 1); ++i) {
             estudiante = estudiante->siguiente;
         }
@@ -99,10 +111,16 @@ EstudiantePorNombre *obtenerEstudiante(EstudiantePorNombre **lista, int posicion
  */
 EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **lista, char *nombre){
     EstudiantePorNombre *estudiante = *lista;
-    while(strcmp(estudiante->nombre, nombre) != 0){
+    while((estudiante->siguiente != NULL)
+    && strcmp(estudiante->nombre, nombre) != 0){
         estudiante = estudiante->siguiente;
     }
-    return estudiante;
+    if (strcmp(estudiante->nombre, nombre) != 0) {
+        printf("El nombre: %s, no existe en la lista.\n", nombre);
+        return NULL;
+    } else {
+        return estudiante;
+    }
 }
 
 /**
@@ -115,33 +133,39 @@ EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **lista, cha
  */
 EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **lista, char *apellido){
     EstudiantePorNombre *estudiante = *lista;
-    while(strcmp(estudiante->apellido, apellido) != 0){
+    while((estudiante->siguiente != NULL)
+          && strcmp(estudiante->apellido, apellido) != 0){
         estudiante = estudiante->siguiente;
     }
-    return estudiante;
+    if (strcmp(estudiante->apellido, apellido) != 0) {
+        printf("El apellido: %s, no existe en la lista.\n", apellido);
+        return NULL;
+    } else {
+        return estudiante;
+    }
 }
 
 void borrarPrimerEstudiante(EstudiantePorNombre *lista) {
     if (lista->siguiente != NULL) {
         *lista = *lista->siguiente;
-        tamanio--;
+        tamanioDeNombres--;
     } else {
         lista = NULL;
-        tamanio--;
+        tamanioDeNombres--;
     }
 }
 
 /**
  * Elimina el estudiante en la posicion pasada como parametro
  * @param lista
- * @param posicion: entre los valores 1 y 'tamanio' de lista
+ * @param posicion: entre los valores 1 y 'tamanioDeNombres' de lista
  */
 void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
     EstudiantePorNombre *estudiante = lista;
     EstudiantePorNombre *aEliminar;
     if ((posicion - 1) == 0) {
         borrarPrimerEstudiante(lista);
-    } else if(posicion>0 && posicion<=tamanio){
+    } else if(posicion>0 && posicion <= tamanioDeNombres){
         for (int i = 0; i < (posicion - 2); ++i) {
             estudiante = estudiante->siguiente;
         }
@@ -149,7 +173,7 @@ void borrarEstudiantePorPosicion(EstudiantePorNombre *lista, int posicion) {
         estudiante->siguiente = estudiante->siguiente->siguiente;
         free(aEliminar);
     }
-    tamanio--;
+    tamanioDeNombres--;
 }
 
 void borrarEstudiantePorNombre(EstudiantePorNombre *lista, char *nombre) {
@@ -158,13 +182,18 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *lista, char *nombre) {
     } else {
         EstudiantePorNombre *estudiante = lista;
         EstudiantePorNombre *aEliminar;
-        while(strcmp(estudiante->siguiente->nombre, nombre) != 0){
+        while ((estudiante->siguiente != NULL)
+        && (strcmp(estudiante->siguiente->nombre, nombre) != 0)) {
             estudiante = estudiante->siguiente;
         }
-        aEliminar = estudiante->siguiente;
-        estudiante->siguiente = estudiante->siguiente->siguiente;
-        free(aEliminar);
-        tamanio--;
+        if (strcmp(estudiante->nombre, nombre) != 0) {
+            printf("El nombre: %s, no existe en la lista.\n", nombre);
+        } else {
+            aEliminar = estudiante->siguiente;
+            estudiante->siguiente = estudiante->siguiente->siguiente;
+            free(aEliminar);
+            tamanioDeNombres--;
+        }
     }
 }
 
@@ -174,13 +203,18 @@ void borrarEstudiantePorApellido(EstudiantePorNombre *lista, char *apellido) {
     } else {
         EstudiantePorNombre *estudiante = lista;
         EstudiantePorNombre *aEliminar;
-        while(strcmp(estudiante->siguiente->apellido, apellido) != 0){
+        while((estudiante->siguiente != NULL)
+        && (strcmp(estudiante->siguiente->apellido, apellido) != 0)){
             estudiante = estudiante->siguiente;
         }
-        aEliminar = estudiante->siguiente;
-        estudiante->siguiente = estudiante->siguiente->siguiente;
-        free(aEliminar);
-        tamanio--;
+        if (strcmp(estudiante->apellido, apellido) != 0) {
+            printf("El apellido: %s, no existe en la lista.\n", apellido);
+        } else {
+            aEliminar = estudiante->siguiente;
+            estudiante->siguiente = estudiante->siguiente->siguiente;
+            free(aEliminar);
+            tamanioDeNombres--;
+        }
     }
 }
 
@@ -190,122 +224,4 @@ void imprimirListaPorNombre(EstudiantePorNombre *lista) {
         lista = lista->siguiente;
     }
     printf("\n");
-}
-
-
-int main(){
-    EstudiantePorNombre *lista = NULL;
-
-    char *nombre = "Fabricio";
-    char *apellido = "Vitaller";
-    char *nombre2 = "Gonzalo";
-    char *apellido2 = "Vitaller";
-    char *nombre3 = "Gabriela";
-    char *apellido3 = "Hughens";
-    char *nombre4 = "Laura";
-    char *apellido4 = "Gascon";
-    char *nombre5 = "Marta";
-    char *apellido5 = "Suarez";
-
-    agregarPorNombre(&lista, apellido, nombre, 46258741);
-    agregarPorNombre(&lista, apellido2, nombre2, 46259741);
-    agregarPorNombre(&lista, apellido3, nombre3, 40654789);
-    agregarPorNombre(&lista, apellido4, nombre4, 50789214);
-    agregarPorNombre(&lista, apellido5, nombre5, 30789214);
-
-    imprimirListaPorNombre(lista);
-
-    EstudiantePorNombre *estudianteP = obtenerEstudiante(&lista, 1);
-    printf("Obtener estudiante en la posicion 1: %s, %s.\n",
-           estudianteP->apellido, estudianteP->nombre);
-
-    estudianteP = obtenerEstudiantePorNombre(&lista, "Gabriela");
-    printf("Obtener un estudiante por nombre 'Gabriela' : %s, %s.\n",
-           estudianteP->apellido, estudianteP->nombre);
-
-    estudianteP = obtenerEstudiantePorApellido(&lista, "Suarez");
-    printf("Obtener un estudiante por apellido 'Suarez' : %s, %s.\n",
-           estudianteP->apellido, estudianteP->nombre);
-
-    printf("Imprimir todos los 5 estudiantes.\n");
-    imprimirListaPorNombre(lista);
-
-    borrarPrimerEstudiante(lista);
-    printf("Imprimir sin el primer estudiante:\n");
-    imprimirListaPorNombre(lista);
-
-//aca empiezan los problemas
-    borrarEstudiantePorPosicion(lista, 2);
-    printf("Imprimir estudiantes menos posicion 2:\n");
-    imprimirListaPorNombre(lista);
-
-    borrarEstudiantePorNombre(lista, "Gabriela");
-    printf("Imprimir estudiantes menos Gabriela\n");
-    imprimirListaPorNombre(lista);
-
-    borrarEstudiantePorApellido(lista, "Vitaller");
-    printf("Imprimir estudiantes menos Fabricio\n");
-    imprimirListaPorNombre(lista);
-
-    printf("El tamanio es: %d", tamanio);
-
-
-/*
-    int opcion = 0;
-    int valor = 0;
-
-    while (opcion != 7){
-        printf("elije una opcion para usar la lista: \n");
-        printf("1. Cargar elemento\n");
-        printf("2. Borrar primer elemento\n");
-        printf("3. Borrar elemento en la posicion X\n");
-        printf("4. Ver tamanio\n");
-        printf("5. Imprimir Lista\n");
-        printf("6. Obtener un elemento de la lista\n");
-        printf("7. salir\n");
-        scanf("%i", &opcion);
-        fflush(stdin);
-        switch (opcion) {
-            case 1:
-                printf("Cual es el valor del elemento: ");
-                scanf("%i", &valor);
-                agregarPorNombre(&lista, valor);
-                fflush(stdin);
-                if(&lista->valor != 0 || &lista->valor != valor){
-                    printf("\nEl elemento ha sido cargado\n");
-                }
-                break;
-            case 2:
-                borrarPrimerElemento(&lista);
-                printf("El primer elemento ha sido borrado\n");
-                break;
-            case 3:
-                printf("Cual es la posicion del elemento a borrar: ");
-                scanf("%i", &valor);
-                borrarXElemento(&lista, valor);
-                fflush(stdin);
-                break;
-            case 4:
-                printf("El tamanio de la lista actualmente es %i\n", tamanio);
-                break;
-            case 5:
-                imprimirListaPorNombre(lista);
-                break;
-            case 6:
-                printf("Cual es la posicion del elemento a obtener: ");
-                scanf("%i", &valor);
-                Nodo nodo = obtenerElemento(&lista, valor);
-                printf("El valor de la lista en la posicion %i es %i."
-                       "\n", valor, nodo.valor);
-                fflush(stdin);
-                break;
-            case 7:
-                break;
-            default:
-                printf("No hay ninguna operacion para el numero %i \n", opcion);
-                break;
-        }
-    }*/
-
-    return 0;
 }
