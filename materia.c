@@ -8,6 +8,7 @@ typedef struct Materia {
     char *nombre;
     int cantDeAprobados;
     int cantDeEstudiantes;
+    int cantDeEstudiantesRendieron;
     int notas;
     int numero;
 } Materia;
@@ -26,6 +27,7 @@ Materia *crearMateria(char *nombre, int numero){
     materia -> numero = numero;
     materia -> cantDeAprobados = 0;
     materia -> cantDeEstudiantes = 0;
+    materia -> cantDeEstudiantesRendieron = 0;
     materia -> siguienteMateria = NULL;
     materia -> nombre = nombre;
     return materia;
@@ -154,6 +156,16 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
             tamanioMateria--;
         }
     }
+}
+
+void obtenerPromedioDeAprobados(Materia *materia){
+    int promedioDeAprobados = (materia->cantDeAprobados*100)/materia->cantDeEstudiantesRendieron;
+    printf("El promedio de aprobacion es del %i%", promedioDeAprobados);
+}
+
+void obtenerNotaPromedio(Materia *materia){
+    int notaPromedio = (materia->notas*100)/materia->cantDeEstudiantesRendieron;
+    printf("El promedio de aprobacion es del %i%", notaPromedio);
 }
 
 void imprimirMaterias(Materia *listaMateria) {

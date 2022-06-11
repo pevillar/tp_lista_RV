@@ -15,10 +15,11 @@ int tamanioMateriaEstudiante = 0;
 
 void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
     if(nota>=0 && nota<10){
-        materiaEstudiante->nota = nota;
-        materiaEstudiante->aprobado = (nota>=4) ? 1 : 0;
-        materiaEstudiante->materia->notas += nota;
-        materiaEstudiante->materia->cantDeAprobados += (nota>=4) ? 1 : 0;
+        materiaEstudiante -> nota = nota;
+        materiaEstudiante -> aprobado = (nota>=4) ? 1 : 0;
+        materiaEstudiante -> materia -> notas += nota;
+        materiaEstudiante -> materia -> cantDeAprobados += (nota>=4) ? 1 : 0;
+        materiaEstudiante -> materia -> cantDeEstudiantesRendieron ++;
     }else{
         printf("la nota no es valida");
     }
