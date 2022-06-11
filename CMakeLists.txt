@@ -20,3 +20,9 @@ add_executable(estudiantePorNombre
 
 add_executable(sistema
         sistema.c)
+
+add_executable(materia
+        materia.c)
+
+add_executable(materiaEstudiante
+        materiaEstudiante.c)

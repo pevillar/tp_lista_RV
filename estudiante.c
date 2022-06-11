@@ -3,17 +3,6 @@
 #include <time.h>
 #include <string.h>
 
-/*
- * Estudiante:
- * Nombre
- * fecha de nacimiento (fecha de nacimiento)
- * Dni (8 digitos)
- * lista Materias a cursar. (listas enlazadas)
- * lista Materias aprobadas. (listas enlazadas)
- * todasMateriasCursadas() [printf de primero aprobadas y después a cursar] (ver de imprimir )
- * próximo estudiante nombre
-*/
-
 typedef struct Estudiante {
     struct Estudiante *siguiente;
     int dni;
@@ -35,7 +24,7 @@ void imprimirEstudiante(Estudiante *estudiante);
 
 
 /**
- * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
+ * Inicializa un Estudiante con su valor pasado como parametro, y 'siguiente'
  * referenciando a 'NULL'.
  * @param valor
  * @return
@@ -89,7 +78,7 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
 }
 
 /**
- * Agrega un nuevo elemento de tipo 'Nodo' a la lista ordenado de forma
+ * Agrega un nuevo elemento de tipo 'Estudiante' a la lista ordenado de forma
  * creciente segun su valor introducido.
  * @param lista
  * @param edad
@@ -167,7 +156,7 @@ int bisiento(int *anio){
  * @param posicion: debe estar entre los valores 1 y tamanio de la lista
  * @return: nodo en la posicion (parametro)
  */
-Estudiante obtenerElemento(Estudiante **lista, int posicion){
+Estudiante obtenerEstudiante(Estudiante **lista, int posicion){
     Estudiante *estudiante = *lista;
     if(posicion>0 && posicion<=tamanio){
         for (int i = 0; i < (posicion - 1); ++i) {
@@ -227,7 +216,7 @@ void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int ed
  * @param lista
  * @param posicion: entre los valores 1 y 'tamanio' de lista
  */
-void borrarXElemento(Estudiante *lista, int posicion) {
+void borrarXEstudiante(Estudiante *lista, int posicion) {
     Estudiante *estudiante = lista;
     Estudiante *aEliminar;
     if(posicion>0 && posicion<=tamanio){

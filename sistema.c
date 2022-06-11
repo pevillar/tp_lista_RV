@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estudiantePorNombre.c"
+#include "materia.c"
 
-void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char* nombre, char* apellido,  int anio, int mes, int dia, int dni) {
+void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char* nombre, char* apellido, int anio, int mes, int dia, int dni) {
     Estudiante *nuevoEstudiante = agregar(lista, nombre, apellido, anio, mes, dia, dni);
     agregarPorNombre(listaNombre,nuevoEstudiante, nombre, apellido);
 }
@@ -30,6 +31,14 @@ void obtenerCantidadDeEstudiantes(){
     printf("Hay %i estudiantes cargados en el sistema.\n", tamanio);
 }
 
+void listarMaterias(Materia *listaMaterias) {
+    imprimirMaterias(listaMaterias);
+}
+
+void cargarMateria(Materia **materia, char *nombre, int numero){
+    agregarMateria(materia,nombre, numero);
+}
+
 int main(){
 
     Estudiante *lista = NULL;
@@ -48,6 +57,20 @@ int main(){
     buscarEstudiantePorRangoEdad(&lista, 22, 34);
     obtenerCantidadDeEstudiantes();
 
-    //imprimirEstudiantes(lista);
+    imprimirEstudiantes(lista);
+
+
+    Materia *listaMaterias = NULL;
+    cargarMateria(&listaMaterias, "Sistema De Representaciones", 1);
+    cargarMateria(&listaMaterias, "Analisis", 3);
+    cargarMateria(&listaMaterias, "Algoritmos y programacion", 2);
+    cargarMateria(&listaMaterias, "Algebra", 4);
+
+    printf("La materia Algebra es la numero %i \n",obtenerMateriaPorNombre(&listaMaterias, "Algebra")->numero);
+
+    listarMaterias(listaMaterias);
+
+
+
     return 0;
 }
