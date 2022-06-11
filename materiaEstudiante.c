@@ -13,6 +13,17 @@ typedef struct MateriaEstudiante {
 
 int tamanioMateriaEstudiante = 0;
 
+void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
+    if(nota>=0 && nota<10){
+        materiaEstudiante->nota = nota;
+        materiaEstudiante->aprobado = (nota>=4) ? 1 : 0;
+        materiaEstudiante->materia->notas += nota;
+        materiaEstudiante->materia->cantDeAprobados += (nota>=4) ? 1 : 0;
+    }else{
+        printf("la nota no es valida");
+    }
+}
+
 /**
  * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
  * referenciando a 'NULL'.
@@ -25,6 +36,7 @@ MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     nuevaMateria -> aprobado = -1;
     nuevaMateria -> siguienteMateriaEstudiante = NULL;
     nuevaMateria -> materia = materia;
+    nuevaMateria -> materia -> cantDeEstudiantes++;
     return nuevaMateria;
 }
 
@@ -72,7 +84,7 @@ void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
 }
 
 
-void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nombre) {
+/*void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nombre) {
     if (strcmp(listaNombre->materia->nombre, nombre) == 0){
         borrarPrimeraMateria(listaNombre);
     } else {
@@ -91,7 +103,7 @@ void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nomb
             tamanioMateriaEstudiante--;
         }
     }
-}
+}*/
 
 void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
@@ -111,7 +123,7 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     printf("\n");
 }
 
-int main(){
+/*int main(){
 
 
     Materia *listaMaterias = NULL;
@@ -123,4 +135,4 @@ int main(){
     imprimirMateriasEstudiante(listaMateriasEstudiante);
 
     return 0;
-}
+}*/

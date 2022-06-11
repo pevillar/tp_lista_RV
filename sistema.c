@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estudiantePorNombre.c"
-#include "materia.c"
 
 void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char* nombre, char* apellido, int anio, int mes, int dia, int dni) {
     Estudiante *nuevoEstudiante = agregar(lista, nombre, apellido, anio, mes, dia, dni);
