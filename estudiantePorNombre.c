@@ -117,7 +117,7 @@ EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **listaNombr
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->nombre, nombre) != 0) {
-        printf("El materia: %s, no existe en la listaNombre.\n", nombre);
+        printf("El Nombre: %s, no existe en el sistema.\n", nombre);
         return NULL;
     } else {
         return estudiante;
@@ -139,7 +139,7 @@ EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **listaNom
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->apellido, apellido) != 0) {
-        printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
+        printf("El Apellido: %s, no existe en el sistema.\n", apellido);
         return NULL;
     } else {
         return estudiante;
@@ -188,7 +188,7 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El materia: %s, no existe en la listaNombre.\n", nombre);
+            printf("El Nombre: %s, no existe en el sistema.\n", nombre);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
@@ -209,7 +209,7 @@ void borrarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellid
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->apellido, apellido) != 0) {
-            printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
+            printf("El Apellido: %s, no existe en el sistema.\n", apellido);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;

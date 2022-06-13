@@ -112,17 +112,17 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
 
 int comprobarNacimiento(int *anio, int *mes, int *dia) {
     if(*anio<1950 || *anio>2004){
-        printf("El a%co esta mal escrito", 164 );
+        printf("El a%co esta mal escrito\nEscriba nuevamente el a%co: ", 164, 164 );
         scanf("%i", anio);
         return 0;
     }
     if(*mes<=0 || *mes>12){
-        printf("El mes esta mal escrito");
+        printf("El mes esta mal escrito\nEscriba nuevamente el mes: ");
         scanf("%i", mes);
         return 0;
     }
     if(comprobarDia(mes,dia,anio) == 0){
-        printf("El dia esta mal escrito");
+        printf("El dia esta mal escrito\nEscriba nuevamente el dia: ");
         scanf("%i", dia);
         return 0;
     }
@@ -279,13 +279,16 @@ void imprimirEstudiante(Estudiante *estudiante){
     printf("edad: %i\n", estudiante->edad);
     printf("dni: %i\n", estudiante->dni);
     printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
-    printf("------------------------------------------");
+    printf("------------------------------------------\n");
 }
 
 void imprimir(Estudiante *lista) {
-    while (lista != NULL) {
-        imprimirEstudiante(lista);
-        lista = lista->siguiente;
+    if(lista != NULL){
+        while (lista != NULL) {
+            imprimirEstudiante(lista);
+            lista = lista->siguiente;
+        }
+    }else{
+        printf("No hay estudiantes cargados en el sistema.");
     }
-    printf("\n");
 }
