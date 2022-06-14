@@ -125,7 +125,7 @@ int main(){
 
     int opcion = 0;
 
-    char nombre[20];
+    char nombre[50];
     char apellido[20];
     int anio;
     int mes;
@@ -156,9 +156,9 @@ int main(){
                 cargarMateria(&listaDeMaterias, *nombre, dni);
                 break;
             case 2:
-                printf("Nombre del estudiante: ");
+                printf("Primer nombre del estudiante: ");
                 scanf("%s",&nombre);
-                printf("Apellido del estudiante: ");
+                printf("Apellido (uno solo) del estudiante: ");
                 scanf("%s",&apellido);
                 printf("fecha de nacimiento (AAAA MM DD)");
                 scanf("%i",&anio);
