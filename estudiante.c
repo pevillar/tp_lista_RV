@@ -6,6 +6,8 @@
 
 typedef struct Estudiante {
     struct Estudiante *siguiente;
+    MateriaEstudiante *materiasEnCurso;
+    MateriaEstudiante *materiasAprobadas;
     int dni;
     char* nombre;
     char* apellido;
@@ -32,6 +34,8 @@ void imprimirEstudiante(Estudiante *estudiante);
  */
 Estudiante *crearEstudiante(char* nombre, char* apellido, int edad, int dni, char* nacimiento){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
+    estudiante->materiasEnCurso = NULL;
+    estudiante->materiasAprobadas = NULL;
     estudiante->nombre = nombre;
     estudiante->apellido = apellido;
     estudiante->edad = edad;
@@ -112,17 +116,17 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
 
 int comprobarNacimiento(int *anio, int *mes, int *dia) {
     if(*anio<1950 || *anio>2004){
-        printf("El a%co esta mal escrito\nEscriba nuevamente el a%co: ", 164, 164 );
+        printf("El a%co esta mal escrito", 164 );
         scanf("%i", anio);
         return 0;
     }
     if(*mes<=0 || *mes>12){
-        printf("El mes esta mal escrito\nEscriba nuevamente el mes: ");
+        printf("El mes esta mal escrito");
         scanf("%i", mes);
         return 0;
     }
     if(comprobarDia(mes,dia,anio) == 0){
-        printf("El dia esta mal escrito\nEscriba nuevamente el dia: ");
+        printf("El dia esta mal escrito");
         scanf("%i", dia);
         return 0;
     }
@@ -220,6 +224,20 @@ void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int ed
     }
 }
 
+void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
+    agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
+}
+
+void anotarMateria(Materia *materia, Estudiante *estudiante) {
+    agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+}
+
+void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
+    MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
+    cargarNota(materiaBuscada, nota);
+
+}
+
 /**
  * Elimina el elemento en la posicion pasada como parametro
  * @param lista
@@ -264,12 +282,6 @@ void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
     aEliminar = estudiante->siguiente;
     estudiante->siguiente = estudiante->siguiente->siguiente;
     free(aEliminar);
-    /*if(edad>0 && edad<=tamanio){
-        for (int i = 0; i < (edad - 1); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-
-    }*/
     tamanio--;
 }
 
@@ -279,16 +291,17 @@ void imprimirEstudiante(Estudiante *estudiante){
     printf("edad: %i\n", estudiante->edad);
     printf("dni: %i\n", estudiante->dni);
     printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
-    printf("------------------------------------------\n");
+    printf("------------------------------------------");
+}
+
+void imprimirMateriasCusrsando(Estudiante *estudiante) {
+    imprimirMateriasEstudiante(estudiante->materiasEnCurso);
 }
 
 void imprimir(Estudiante *lista) {
-    if(lista != NULL){
-        while (lista != NULL) {
-            imprimirEstudiante(lista);
-            lista = lista->siguiente;
-        }
-    }else{
-        printf("No hay estudiantes cargados en el sistema.");
+    while (lista != NULL) {
+        imprimirEstudiante(lista);
+        lista = lista->siguiente;
     }
+    printf("\n");
 }

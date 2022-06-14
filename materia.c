@@ -34,10 +34,10 @@ Materia *crearMateria(char *nombre, int numero){
 }
 
 /**
- * Agrega un nuevo elemento de tipo 'Nodo' a la lista ordenado de forma
- * creciente segun su valor introducido.
+ *
  * @param materia
  * @param nombre
+ * @param numero
  */
 void agregarMateria(Materia **materia, char * nombre, int numero){
     Materia  *nuevoMateria = crearMateria(nombre, numero);
@@ -58,10 +58,10 @@ void agregarMateria(Materia **materia, char * nombre, int numero){
 }
 
 /**
- * Se obtiene el elemento en la posicion pasada como parametro.
+ *
  * @param listaMateria
- * @param posicion: debe estar entre los valores 1 y tamanio de la listaMateria
- * @return: nodo en la posicion (parametro)
+ * @param posicion
+ * @return
  */
 Materia obtenerMateria(Materia **listaMateria, int posicion){
     Materia  *materia = *listaMateria;
@@ -74,10 +74,10 @@ Materia obtenerMateria(Materia **listaMateria, int posicion){
 }
 
 /**
- * Se obtiene el elemento con el valor pasado como parametro.
+ *
  * @param listaMateria
- * @param valor: valor del nodo a buscar.
- * @return: nodo en la posicion (parametro)
+ * @param valor
+ * @return
  */
 Materia obtenerElementoPorValor(Materia **listaMateria, int valor){
     Materia *materia = *listaMateria;
@@ -88,10 +88,10 @@ Materia obtenerElementoPorValor(Materia **listaMateria, int valor){
 }
 
 /**
- * Se obtiene la primer materia en la listaMateria con el materia pasado como parametro.
+ *
  * @param listaMateria
- * @param valor: valor del nodo a buscar.
- * @return: nodo en la posicion (parametro)
+ * @param nombre
+ * @return
  */
 Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
     Materia *materia = *listaMateria;
@@ -117,11 +117,6 @@ void borrarPrimeraMateria(Materia *listaNombre) {
     }
 }
 
-/**
- * Elimina el elemento en la posicion pasada como parametro
- * @param listaMateria
- * @param posicion: entre los valores 1 y 'tamanio' de listaMateria
- */
 void borrarXMateria(Materia *listaMateria, int posicion) {
     Materia *materia = listaMateria;
     Materia *aEliminar;
@@ -135,7 +130,6 @@ void borrarXMateria(Materia *listaMateria, int posicion) {
     }
     tamanioMateria--;
 }
-
 
 void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
     if (strcmp(listaNombre->nombre, nombre) == 0){

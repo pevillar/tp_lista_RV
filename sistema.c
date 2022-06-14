@@ -10,9 +10,20 @@ void imprimirEstudiantes(Estudiante *lista) {
     imprimirListaPorNombre(lista);
 }
 
+Estudiante *buscarEstudiantePorNombreCompleto(EstudiantePorNombre *listaNombre, char *nombre, char *apellido) {
+    EstudiantePorNombre *estudianteN = obtenerEstudianteNombreCompleto(&listaNombre, nombre, apellido);
+    if(estudianteN == NULL){
+        printf("No existe el estudiante: %s %s, en el sistema.\n", nombre, apellido);
+        return NULL;
+    }else{
+        return estudianteN->estudianteEdad;
+    }
+}
+
 Estudiante *buscarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
     EstudiantePorNombre *estudianteN = obtenerEstudiantePorNombre(&listaNombre, nombre);
     if(estudianteN == NULL){
+        printf("No existe el estudiante de nombre: %s, en el sistema.\n", nombre);
         return NULL;
     }else{
         return estudianteN->estudianteEdad;
@@ -22,6 +33,7 @@ Estudiante *buscarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *no
 Estudiante *buscarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellido) {
     EstudiantePorNombre *estudianteN = obtenerEstudiantePorApellido(&listaNombre, apellido);
     if(estudianteN == NULL){
+        printf("No existe el estudiante de apellido: %s, en el sistema.\n", apellido);
         return NULL;
     }else{
         return estudianteN->estudianteEdad;
@@ -57,10 +69,10 @@ void obtenerEstadisticas(Materia *materia){
 }
 
 int main(){
-/*
+
+    /*
     Estudiante *lista = NULL;
     EstudiantePorNombre *listaNombre = NULL;
-
     darDeAltaEstudiante(&lista, &listaNombre, "Pepito", "Guzman", 1989, 10, 5, 45786812);
     darDeAltaEstudiante(&lista,&listaNombre, "Jorge", "Fiel", 1987, 10, 5, 49689238);
     darDeAltaEstudiante(&lista,&listaNombre, "Julio", "Fiel", 1987, 10, 5, 49689248);
@@ -68,33 +80,25 @@ int main(){
     darDeAltaEstudiante(&lista,&listaNombre, "Azul", "Perez", 1987, 10, 5, 49689268);
     darDeAltaEstudiante(&lista,&listaNombre, "Maria", "Munoz", 1999, 10, 5, 49789823);
     darDeAltaEstudiante(&lista,&listaNombre, "Rocio", "Rodriguez", 2004, 10, 5, 49768923);
-
     Estudiante *estPrueba = buscarEstudiantePorNombre(listaNombre, "Jorge");
     printf("Jorge: %s\n", estPrueba->apellido);
     estPrueba = buscarEstudiantePorApellido(listaNombre, "Rodriguez");
     printf("Rodriguez: %s\n", estPrueba->nombre);
-
     buscarEstudiantePorRangoEdad(&lista, 22, 34);
     printf("El estudiante %s %s fue encontrado\n", obtenerEstudiantePorEdad(&lista, 35,49689258 )->nombre,obtenerEstudiantePorEdad(&lista, 35,49689258 )->apellido);
     obtenerCantidadDeEstudiantes();
-
     imprimirEstudiantes(lista);
-
     borrarEstudiantePorEdad(&lista, 35, 49689258);
-
     Estudiante *estPrueba1= obtenerEstudiantePorEdad(&lista, 35,49689258 );
     if(estPrueba1 != NULL) {
         printf("El estudiante %s %s fue encontrado\n",obtenerEstudiantePorEdad(&lista, 35,49689258)->nombre, obtenerEstudiantePorEdad(&lista, 35,49689258)->apellido);
     }
-
     Materia *listaMaterias = NULL;
     cargarMateria(&listaMaterias, "Sistema De Representaciones", 1);
     cargarMateria(&listaMaterias, "Analisis", 3);
     cargarMateria(&listaMaterias, "Algoritmos y programacion", 2);
     cargarMateria(&listaMaterias, "Algebra", 4);
-
     printf("La materia Algebra es la numero %i \n",obtenerMateriaPorNombre(&listaMaterias, "Algebra")->numero);
-
     listarMaterias(listaMaterias);*/
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -106,14 +110,14 @@ int main(){
 
     int opcion = 0;
 
-    char nombre[20];
+    char nombre[50];
     char apellido[20];
     int anio;
     int mes;
     int dia;
     int dni;
 
-    while(opcion != 11){
+    while(opcion != 12){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n");
         printf("1. Crear una materia\n");
         printf("2. Agregar un estudiante\n");
@@ -122,10 +126,11 @@ int main(){
         printf("5. Ver todas las materia\n");
         printf("6. Anotar a un estudiante a una materia\n"); //falta cargar
         printf("7. Cargar la nota de un estudiante\n"); //falta cargar
-        printf("8. Ver las estadisticas de una materias\n");
-        printf("9. Ver todos los estudiantes\n");
-        printf("10. Ver cantidad de estudiantes\n");
-        printf("11. Salir\n");
+        printf("8. Imprimir las materias en curso de un estudiante\n");
+        printf("9. Ver las estadisticas de una materias\n");
+        printf("10. Ver todos los estudiantes\n");
+        printf("11 Ver cantidad de estudiantes\n");
+        printf("12. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
@@ -136,9 +141,9 @@ int main(){
                 cargarMateria(&listaDeMaterias, *nombre, dni);
                 break;
             case 2:
-                printf("Nombre del estudiante: ");
+                printf("Primer nombre del estudiante: ");
                 scanf("%s",&nombre);
-                printf("Apellido del estudiante: ");
+                printf("Apellido (uno solo) del estudiante: ");
                 scanf("%s",&apellido);
                 printf("fecha de nacimiento (AAAA MM DD)");
                 scanf("%i",&anio);
@@ -149,9 +154,12 @@ int main(){
                 darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
                 break;
             case 3:
-                printf("Nombre del estudiante a buscar: ");
+                printf("Nota: escribir primero el nombre luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
                 scanf("%s", &nombre);
-                estudiantePrueba = buscarEstudiantePorNombre(&listaEstudiantesNombre, nombre);
+                printf("Escribe el apellido del estudiante: ");
+                scanf("%s", &apellido);
+                estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                 if(estudiantePrueba != NULL){
                     imprimirEstudiante(estudiantePrueba);
                 }
@@ -166,13 +174,41 @@ int main(){
             case 5:
                 listarMaterias(listaDeMaterias);
                 break;
-            /*case 6:
-
+            case 6:
+                printf("Nota: escribir primero el nombre luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                printf("Escribe el apellido del estudiante: ");
+                scanf("%s", &apellido);
+                estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
+                printf("\nNombre de la materia a anotarse: ");
+                scanf("%s", apellido);
+                materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, apellido);
+                anotarMateria(materiaPrueba, estudiantePrueba);
                 break;
             case 7:
-
-                break;*/
+                printf("Nota: escribir primero el nombre luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                printf("Escribe el apellido del estudiante: ");
+                scanf("%s", &apellido);
+                estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
+                printf("\nNombre de la materia a anotarse: ");
+                scanf("%s", apellido);
+                printf("Escribe la nota: ");
+                scanf("%i", &dni);
+                cargarNotaAMateria(apellido, estudiantePrueba, dni);
+                break;
             case 8:
+                printf("Nota: escribir primero el nombre luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                printf("Escribe el apellido del estudiante: ");
+                scanf("%s", &apellido);
+                estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
+                imprimirMateriasCusrsando(estudiantePrueba);
+                break;
+            case 9:
                 printf("Escribe el nombre de la materia que deseas obtener: ");
                 scanf("%s", &nombre);
                 materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, nombre);
@@ -180,13 +216,13 @@ int main(){
                     obtenerEstadisticas(materiaPrueba);
                 }
                 break;
-            case 9:
+            case 10:
                 imprimirEstudiantes(listaEstudiantes);
                 break;
-            case 10:
+            case 11:
                 obtenerCantidadDeEstudiantes();
                 break;
-            case 11:
+            case 12:
                 printf("Gracias por utilizar el sistema\n");
                 break;
             default:
@@ -194,5 +230,8 @@ int main(){
                 break;
         }
     }
+
+
+
     return 0;
 }
