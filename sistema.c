@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "estudiantePorNombre.c"
 
 void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char* nombre, char* apellido, int anio, int mes, int dia, int dni) {
@@ -9,25 +7,36 @@ void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, 
 }
 
 void imprimirEstudiantes(Estudiante *lista) {
-    imprimir(lista);
+    imprimirListaPorNombre(lista);
 }
 
 Estudiante *buscarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
     EstudiantePorNombre *estudianteN = obtenerEstudiantePorNombre(&listaNombre, nombre);
-    return estudianteN->estudianteEdad;
+    if(estudianteN == NULL){
+        return NULL;
+    }else{
+        return estudianteN->estudianteEdad;
+    }
 }
 
 Estudiante *buscarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellido) {
     EstudiantePorNombre *estudianteN = obtenerEstudiantePorApellido(&listaNombre, apellido);
-    return estudianteN->estudianteEdad;
-}
+    if(estudianteN == NULL){
+        return NULL;
+    }else{
+        return estudianteN->estudianteEdad;
+    }}
 
 void buscarEstudiantePorRangoEdad(Estudiante **lista, int edadMinima, int edadMaxima) {
     obtenerEstudiantePorRangoDeEdad(lista, edadMinima, edadMaxima);
 }
 
 void obtenerCantidadDeEstudiantes(){
-    printf("Hay %i estudiantes cargados en el sistema.\n", tamanio);
+    if(tamanio == 1){
+        printf("Hay un estudiante cargado en el sistema.\n");
+    }else{
+        printf("Hay %i estudiantes cargados en el sistema.\n", tamanio);
+    }
 }
 
 void listarMaterias(Materia *listaMaterias) {
@@ -38,8 +47,36 @@ void cargarMateria(Materia **materia, char *nombre, int numero){
     agregarMateria(materia,nombre, numero);
 }
 
+void obtenerEstadisticas(Materia *materia){
+    if(materia->cantDeEstudiantesRendieron == 0){
+        printf("Nadie a rendido esta materia todavia\n");
+    }else{
+        obtenerPromedioDeAprobados(materia);
+        obtenerNotaPromedio(materia);
+    }
+}
+
 int main(){
 
+    Estudiante *lista = NULL;
+    EstudiantePorNombre *listaNombre = NULL;
+
+    darDeAltaEstudiante(&lista, &listaNombre, "Pepito", "Guzman", 1989, 10, 5, 45786812);
+
+    Materia *listaMaterias = NULL;
+    cargarMateria(&listaMaterias, "Sistema De Representaciones", 1);
+    cargarMateria(&listaMaterias, "Analisis", 3);
+    cargarMateria(&listaMaterias, "Algoritmos y programacion", 2);
+    cargarMateria(&listaMaterias, "Algebra", 4);
+
+
+
+    anotarMateria(listaMaterias, lista);
+    anotarMateria(listaMaterias->siguienteMateria, lista);
+
+    imprimirMateriasEstudiante(lista->materiasEnCurso);
+
+    /*
     Estudiante *lista = NULL;
     EstudiantePorNombre *listaNombre = NULL;
 
@@ -77,7 +114,125 @@ int main(){
 
     printf("La materia Algebra es la numero %i \n",obtenerMateriaPorNombre(&listaMaterias, "Algebra")->numero);
 
-    listarMaterias(listaMaterias);
+    listarMaterias(listaMaterias);*/
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    Materia *listaDeMaterias = NULL;
+    Estudiante *listaEstudiantes = NULL;
+    EstudiantePorNombre *listaEstudiantesNombre = NULL;
+    Estudiante *estudiantePrueba;
+    Materia *materiaPrueba;
+
+    int opcion = 0;
+
+    char nombre[20];
+    char apellido[20];
+    int anio;
+    int mes;
+    int dia;
+    int dni;
+
+    while(opcion != 12){
+        printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n");
+        printf("1. Crear una materia\n");
+        printf("2. Agregar un estudiante\n");
+        printf("3. Buscar un estudiante por nombre\n");
+        printf("4. Buscar un estudiante por rango de edad\n");
+        printf("5. Ver todas las materia\n");
+        printf("6. Anotar a un estudiante a una materia\n"); //falta cargar
+        printf("7. Cargar la nota de un estudiante\n"); //falta cargar
+        printf("8. Imprimir las materias en curso de un estudiante\n");
+        printf("9. Ver las estadisticas de una materias\n");
+        printf("10. Ver todos los estudiantes\n");
+        printf("11 Ver cantidad de estudiantes\n");
+        printf("12. Salir\n");
+        scanf("%i",&opcion);
+        switch (opcion) {
+            case 1:
+                printf("Nombre de la materia: ");
+                scanf("%s",nombre);
+                printf("ID de la materia: ");
+                scanf("%i",&dni);
+                cargarMateria(&listaDeMaterias, *nombre, dni);
+                break;
+            case 2:
+                printf("Nombre del estudiante: ");
+                scanf("%s",&nombre);
+                printf("Apellido del estudiante: ");
+                scanf("%s",&apellido);
+                printf("fecha de nacimiento (AAAA MM DD)");
+                scanf("%i",&anio);
+                scanf("%i",&mes);
+                scanf("%i",&dia);
+                printf("DNI: ");
+                scanf("%i",&dni);
+                darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
+                break;
+            case 3:
+                printf("Nombre del estudiante a buscar: ");
+                scanf("%s", &nombre);
+                estudiantePrueba = buscarEstudiantePorNombre(&listaEstudiantesNombre, nombre);
+                if(estudiantePrueba != NULL){
+                    imprimirEstudiante(estudiantePrueba);
+                }
+                break;
+            case 4:
+                printf("Escribe el minimo de edad: ");
+                scanf("%i",&anio);
+                printf("\nEscribe el maximo de edad: ");
+                scanf("%i", &mes);
+                buscarEstudiantePorRangoEdad(&listaEstudiantes,anio,mes);
+                break;
+            case 5:
+                listarMaterias(listaDeMaterias);
+                break;
+            case 6:
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                estudiantePrueba = buscarEstudiantePorNombre(listaEstudiantesNombre, nombre);
+                printf("\nNombre de la materia a anotarse: ");
+                scanf("%s", apellido);
+                materiaPrueba = obtenerMateriaPorNombre(&listaMaterias, apellido);
+                anotarMateria(materiaPrueba, estudiantePrueba);
+                break;
+            case 7:
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                estudiantePrueba = buscarEstudiantePorNombre(listaEstudiantesNombre, nombre);
+                printf("\nNombre de la materia a anotarse: ");
+                scanf("%s", apellido);
+                printf("Escribe la nota: ");
+                scanf("%i", &dni);
+                cargarNotaAMateria(apellido, estudiantePrueba, dni);
+                break;
+            case 8:
+                printf("Escribe el nombre del estudiante: ");
+                scanf("%s", &nombre);
+                estudiantePrueba = buscarEstudiantePorNombre(listaEstudiantesNombre, nombre);
+                imprimirMateriasCusrsando(estudiantePrueba);
+                break;
+            case 9:
+                printf("Escribe el nombre de la materia que deseas obtener: ");
+                scanf("%s", &nombre);
+                materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, nombre);
+                if(materiaPrueba != NULL){
+                    obtenerEstadisticas(materiaPrueba);
+                }
+                break;
+            case 10:
+                imprimirEstudiantes(listaEstudiantes);
+                break;
+            case 11:
+                obtenerCantidadDeEstudiantes();
+                break;
+            case 12:
+                printf("Gracias por utilizar el sistema\n");
+                break;
+            default:
+                printf("No hay ninguna operacion para el numero %i \n", opcion);
+                break;
+        }
+    }
 
 
 

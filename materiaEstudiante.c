@@ -14,7 +14,7 @@ typedef struct MateriaEstudiante {
 int tamanioMateriaEstudiante = 0;
 
 void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
-    if(nota>=0 && nota<10){
+    if(nota>=0 && nota<=10){
         materiaEstudiante -> nota = nota;
         materiaEstudiante -> aprobado = (nota>=4) ? 1 : 0;
         materiaEstudiante -> materia -> notas += nota;
@@ -25,12 +25,6 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
     }
 }
 
-/**
- * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
- * referenciando a 'NULL'.
- * @param valor
- * @return
- */
 MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     MateriaEstudiante *nuevaMateria = (MateriaEstudiante*) malloc(sizeof (MateriaEstudiante));
     nuevaMateria -> nota = -1;
@@ -41,25 +35,13 @@ MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     return nuevaMateria;
 }
 
-/**
- * Agrega un nuevo elemento de tipo 'Nodo' a la lista ordenado de forma
- * creciente segun su valor introducido.
- * @param materiaEstudiante
- * @param nombre
- */
-void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *materia ){
+void *agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *materia ){
     MateriaEstudiante  *nuevoMateria = crearMateriaEstudiante(materia);
     nuevoMateria->siguienteMateriaEstudiante = *materiaEstudiante;
     *materiaEstudiante = nuevoMateria;
     tamanioMateriaEstudiante++;
 }
 
-/**
- * Se obtiene la primer materia en la listaMateria con el materia pasado como parametro.
- * @param listaMateria
- * @param valor: valor del nodo a buscar.
- * @return: nodo en la posicion (parametro)
- */
 MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMateria, char *nombre){
     MateriaEstudiante *materia = *listaMateria;
     while((materia->siguienteMateriaEstudiante != NULL)

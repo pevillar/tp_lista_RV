@@ -6,6 +6,8 @@
 
 typedef struct Estudiante {
     struct Estudiante *siguiente;
+    MateriaEstudiante *materiasEnCurso;
+    MateriaEstudiante *materiasAprobadas;
     int dni;
     char* nombre;
     char* apellido;
@@ -32,6 +34,8 @@ void imprimirEstudiante(Estudiante *estudiante);
  */
 Estudiante *crearEstudiante(char* nombre, char* apellido, int edad, int dni, char* nacimiento){
     Estudiante *estudiante = (Estudiante*) malloc(sizeof(Estudiante));
+    estudiante->materiasEnCurso = NULL;
+    estudiante->materiasAprobadas = NULL;
     estudiante->nombre = nombre;
     estudiante->apellido = apellido;
     estudiante->edad = edad;
@@ -220,6 +224,20 @@ void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int ed
     }
 }
 
+void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
+    agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
+}
+
+void anotarMateria(Materia *materia, Estudiante *estudiante) {
+    agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+}
+
+void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
+    MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
+    cargarNota(materiaBuscada, nota);
+
+}
+
 /**
  * Elimina el elemento en la posicion pasada como parametro
  * @param lista
@@ -264,12 +282,6 @@ void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
     aEliminar = estudiante->siguiente;
     estudiante->siguiente = estudiante->siguiente->siguiente;
     free(aEliminar);
-    /*if(edad>0 && edad<=tamanio){
-        for (int i = 0; i < (edad - 1); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-
-    }*/
     tamanio--;
 }
 
@@ -280,6 +292,10 @@ void imprimirEstudiante(Estudiante *estudiante){
     printf("dni: %i\n", estudiante->dni);
     printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
     printf("------------------------------------------");
+}
+
+void imprimirMateriasCusrsando(Estudiante *estudiante) {
+    imprimirMateriasEstudiante(estudiante->materiasEnCurso);
 }
 
 void imprimir(Estudiante *lista) {
