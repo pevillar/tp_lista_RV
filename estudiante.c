@@ -228,7 +228,7 @@ void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
     agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
 }
 
-void anotarMateria(Materia *materia, Estudiante *estudiante) {
+void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
     agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
 }
 
