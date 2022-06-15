@@ -233,7 +233,7 @@ Estudiante *obtenerEstudiantePorEdad(Estudiante **lista, int edad, int dni){
  * @param edad: edad del estudiante a buscar.
  * @return: nodo en la posicion (parametro)
  */
-void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int edadMaxima){
+void obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int edadMaxima){
     Estudiante *estudiante = *lista;
     while(estudiante->edad < edadMinima){
         if(estudiante->siguiente == NULL){
