@@ -100,7 +100,7 @@ Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
         materia = materia->siguienteMateria;
     }
     if (strcmp(materia->nombre, nombre) != 0) {
-        printf("La materia: %s, no existe en la listaMateria.\n", nombre);
+        printf("La materia: %s, no existe en el sistema.\n", nombre);
         return NULL;
     } else {
         return materia;
@@ -142,7 +142,7 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
             estudiante = estudiante->siguienteMateria;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El materia: %s, no existe en la listaNombre.\n", nombre);
+            printf("El materia: %s, no existe en el sistema.\n", nombre);
         } else {
             aEliminar = estudiante->siguienteMateria;
             estudiante->siguienteMateria = estudiante->siguienteMateria->siguienteMateria;
@@ -153,12 +153,12 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
 }
 
 void obtenerPromedioDeAprobados(Materia *materia){
-    float promedioDeAprobados = (materia->cantDeAprobados*100)/materia->cantDeEstudiantesRendieron;
+    float promedioDeAprobados = (materia->cantDeAprobados*100)*1.0/materia->cantDeEstudiantesRendieron;
     printf("El promedio de aprobacion es del %.2f\n", promedioDeAprobados);
 }
 
 void obtenerNotaPromedio(Materia *materia){
-    float notaPromedio = (materia->notas*100)/materia->cantDeEstudiantesRendieron;
+    float notaPromedio = (materia->notas*100)*1.0/materia->cantDeEstudiantesRendieron;
     printf("La nota promedio en es %.2f\n", notaPromedio);
 }
 
@@ -167,5 +167,4 @@ void imprimirMaterias(Materia *listaMateria) {
         printf("%d - %s\n", listaMateria->numero, listaMateria->nombre);
         listaMateria = listaMateria->siguienteMateria;
     }
-    printf("\n");
 }

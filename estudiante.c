@@ -18,13 +18,68 @@ typedef struct Estudiante {
 
 int tamanio = 0;
 
-int ComprobarDni(int *dni);
-int lenInt(int dni);
-int comprobarNacimiento(int *anio, int *mes, int *dia);
-int comprobarDia(int *mes, int *dia, int *anio);
-int bisiento(int *anio);
-void imprimirEstudiante(Estudiante *estudiante);
-int obtenerEdad(struct tm fechaActual, int anio, int mes, int dia);
+//no se usa un puntero devido a que el valor del entero se va cambiando para encontra el len
+int lenInt(int integer){
+    int count = 0;
+    while(integer>10){
+        integer /= 10;
+        count++;
+    }
+    count ++;
+    return count;
+}
+
+int ComprobarDni(int *dni) {
+    //lenInt devuelve 1 si el numero es negativo
+    if(lenInt(*dni) == 8){
+        return 1;
+    }
+    printf("el dni tiene un valor invalido\nRecuerde que el DNI cuenta con 8 numeros. Ingrese el dni: ");
+    scanf("%i", dni);
+    return 0;
+}
+
+int bisiento(int *anio){
+    if ( *anio % 4 == 0 && *anio % 100 != 0 || *anio % 400 == 0 )  {
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int comprobarDia(int *mes, int *dia, int *anio) {
+    if(*mes == 2 && *dia<=28){
+        return 1;
+    }else if(*mes == 2 && *dia == 29 && bisiento(anio) == 1){
+        return 1;
+    }
+    if((*mes == 4 || *mes == 6 || *mes == 9 || *mes == 11) && *dia <= 30){
+        return 1;
+    }
+    if((*mes == 1 || *mes == 3 || *mes == 5 || *mes == 7 || *mes == 8 || *mes == 10 || *mes == 12) && *dia <= 31){
+        return 1;
+    }
+    return 0;
+}
+
+int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
+    if(*anio<1950 || *anio>fechaActual->tm_year+1900-18){
+        printf("El a%co esta mal escrito\nRecuerde que debe de estar entre 1950 y %i. Ingreselo nuevamente: ", 164 , fechaActual->tm_year+1900-18);
+        scanf("%i", anio);
+        return 0;
+    }
+    if(*mes<=0 || *mes>12){
+        printf("El mes esta mal escrito. Igreselo nuevamente: ");
+        scanf("%i", mes);
+        return 0;
+    }
+    if(comprobarDia(mes,dia,anio) == 0){
+        printf("El dia esta mal escrito. Ingreselo nuevamente");
+        scanf("%i", dia);
+        return 0;
+    }
+    return 1;
+}
 
 /**
  * Inicializa un Estudiante con su valor pasado como parametro, y 'siguiente'
@@ -45,26 +100,6 @@ Estudiante *crearEstudiante(char* nombre, char* apellido, int edad, int dni, cha
     return estudiante;
 }
 
-int ComprobarDni(int *dni) {
-    //lenInt devuelve 1 si el numero es negativo
-    if(lenInt(*dni) == 8){
-        return 1;
-    }
-    printf("el dni tiene un valor invalido\n ingrese el dni: ");
-    scanf("%i", dni);
-    return 0;
-}
-//no se usa un puntero devido a que el valor del entero se va cambiando para encontra el len
-int lenInt(int integer){
-    int count = 0;
-    while(integer>10){
-        integer /= 10;
-        count++;
-    }
-    count ++;
-    return count;
-}
-
 
 char* obtenerNacimiento( int *anio, int *mes, int *dia){
     char* nacimiento = (char*)calloc(10,sizeof(char));
@@ -82,6 +117,16 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
     return nacimiento;
 }
 
+int obtenerEdad(struct tm *fechaActual, int *anio,int *mes, int *dia) {
+    int edad = fechaActual->tm_year+1900-*anio;
+    if(fechaActual->tm_mon+1-*mes<0){
+        edad--;
+    }else if(fechaActual->tm_mday-*dia<0){
+        edad--;
+    }
+    return edad;
+}
+
 /**
  * Agrega un nuevo elemento de tipo 'Estudiante' a la lista ordenado de forma
  * creciente segun su valor introducido.
@@ -89,13 +134,12 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
  * @param edad
  */
 Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio, int mes, int dia, int dni){
-    //juntar comprobaciones de nacimiento y dni cuando funcione
-    while(comprobarNacimiento(&anio, &mes, &dia)==0);
-    while(ComprobarDni(&dni) == 0);
-    char *nacimiento = obtenerNacimiento(&anio, &mes, &dia);
     time_t fecha = time(NULL);
     struct tm fechaActual = *localtime(&fecha);
-    int edad = obtenerEdad(fechaActual,anio,mes,dia);
+    while(comprobarNacimiento(&fechaActual, &anio, &mes, &dia)==0);
+    while(ComprobarDni(&dni) == 0);
+    char *nacimiento = obtenerNacimiento(&anio, &mes, &dia);
+    int edad = obtenerEdad(&fechaActual,&anio,&mes,&dia);
     Estudiante *nuevoEstudiante = crearEstudiante(nombre, apellido, edad, dni, nacimiento);
     Estudiante *cursor = *lista;
 
@@ -115,55 +159,29 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
     return nuevoEstudiante;
 }
 
-int obtenerEdad(struct tm fechaActual, int anio,int mes, int dia) {
-    int edad = fechaActual.tm_year+1900-anio;
-    if(fechaActual.tm_mon+1-mes<0){
-        edad--;
-    }else if(fechaActual.tm_mday-dia<0){
-        edad--;
-    }
-    return edad;
+void imprimirEstudiante(Estudiante *estudiante){
+    printf("\nApellido: %s\n", estudiante->apellido);
+    printf("Nombre: %s\n", estudiante->nombre);
+    printf("edad: %i\n", estudiante->edad);
+    printf("dni: %i\n", estudiante->dni);
+    printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
+    printf("------------------------------------------");
 }
 
-int comprobarNacimiento(int *anio, int *mes, int *dia) {
-    if(*anio<1950 || *anio>2004){
-        printf("El a%co esta mal escrito", 164 );
-        scanf("%i", anio);
-        return 0;
-    }
-    if(*mes<=0 || *mes>12){
-        printf("El mes esta mal escrito");
-        scanf("%i", mes);
-        return 0;
-    }
-    if(comprobarDia(mes,dia,anio) == 0){
-        printf("El dia esta mal escrito");
-        scanf("%i", dia);
-        return 0;
-    }
-    return 1;
-}
-
-int comprobarDia(int *mes, int *dia, int *anio) {
-    if(*mes == 2 && *dia<=28){
-        return 1;
-    }else if(*mes == 2 && *dia == 29 && bisiento(anio) == 1){
-        return 1;
-    }
-    if((*mes == 4 || *mes == 6 || *mes == 9 || *mes == 11) && *dia <= 30){
-        return 1;
-    }
-    if((*mes == 1 || *mes == 3 || *mes == 5 || *mes == 7 || *mes == 8 || *mes == 10 || *mes == 12) && *dia <= 31){
-        return 1;
-    }
-    return 0;
-}
-int bisiento(int *anio){
-    if ( *anio % 4 == 0 && *anio % 100 != 0 || *anio % 400 == 0 )  {
-        return 1;
+void imprimirMateriasCusrsando(Estudiante *estudiante) {
+    if(estudiante->materiasEnCurso != NULL) {
+        imprimirMateriasEstudiante(estudiante->materiasEnCurso);
     }else{
-        return 0;
+        printf("el estudiante %S %S no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
     }
+}
+
+void imprimir(Estudiante *lista) {
+    while (lista != NULL) {
+        imprimirEstudiante(lista);
+        lista = lista->siguiente;
+    }
+    printf("\n");
 }
 
 /**
@@ -219,7 +237,7 @@ void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int ed
     Estudiante *estudiante = *lista;
     while(estudiante->edad < edadMinima){
         if(estudiante->siguiente == NULL){
-            printf("No se encontro un estud    iante en este rango\n");
+            printf("No se encontro un estudiante en este rango\n");
             estudiante = NULL;
             break;
         }
@@ -244,9 +262,13 @@ void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
 }
 
 void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
-    MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
-    if(materiaBuscada != NULL){
-        cargarNota(materiaBuscada, nota);
+    if(estudiante->materiasEnCurso != NULL){
+        MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
+        if(materiaBuscada != NULL){
+            cargarNota(materiaBuscada, nota);
+        }
+    }else{
+        printf("El estudiante %s %s no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
     }
 }
 
@@ -295,25 +317,4 @@ void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
     estudiante->siguiente = estudiante->siguiente->siguiente;
     free(aEliminar);
     tamanio--;
-}
-
-void imprimirEstudiante(Estudiante *estudiante){
-    printf("\nApellido: %s\n", estudiante->apellido);
-    printf("Nombre: %s\n", estudiante->nombre);
-    printf("edad: %i\n", estudiante->edad);
-    printf("dni: %i\n", estudiante->dni);
-    printf("fecha de nacimiento: %s\n", estudiante->fechaDeNacimiento);
-    printf("------------------------------------------");
-}
-
-void imprimirMateriasCusrsando(Estudiante *estudiante) {
-    imprimirMateriasEstudiante(estudiante->materiasEnCurso);
-}
-
-void imprimir(Estudiante *lista) {
-    while (lista != NULL) {
-        imprimirEstudiante(lista);
-        lista = lista->siguiente;
-    }
-    printf("\n");
 }

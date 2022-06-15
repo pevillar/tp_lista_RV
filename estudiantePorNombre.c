@@ -191,7 +191,7 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El nombre: %s, no existe en la listaNombre.\n", nombre);
+            printf("El nombre: %s, no existe en el sistema.\n", nombre);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
@@ -212,7 +212,7 @@ void borrarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellid
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->apellido, apellido) != 0) {
-            printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
+            printf("El apellido: %s, no existe en el sistema.\n", apellido);
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
