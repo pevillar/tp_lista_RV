@@ -69,7 +69,7 @@ void cargarMateria(Materia **materia, char *nombre, int numero){
 
 void obtenerEstadisticas(Materia *materia){
     if(materia->cantDeEstudiantesRendieron == 0){
-        printf("Nadie a rendido esta materia todavia\n");
+        printf("Nadie ha rendido esta materia todavia\n");
     }else{
         obtenerPromedioDeAprobados(materia);
         obtenerNotaPromedio(materia);
@@ -132,40 +132,37 @@ int main(){
     mes = 2;
     dia = 5;
     dni = 43874800;
-
   darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre,  nombre, apellido, anio, mes, dia, dni);
-
     nombre = "puerto";
     apellido = "julio";
     anio = 1980;
     mes = 1;
     dia = 12;
     dni = 12345678;
-
     darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
-
     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, "miguel", apellido);
     imprimir(estudiantePrueba);
-
 */
     while(opcion != 12){
-        printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n");
+        printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
+               "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
+               "para escribir por ejemplo: 'seniales'.\n");
         printf("1. Crear una materia\n");
         printf("2. Agregar un estudiante\n");
         printf("3. Buscar un estudiante por nombre\n");
         printf("4. Buscar un estudiante por rango de edad\n");
-        printf("5. Ver todas las materia\n");
-        printf("6. Anotar a un estudiante a una materia\n"); //falta cargar
-        printf("7. Cargar la nota de un estudiante\n"); //falta cargar
+        printf("5. Ver todas las materias\n");
+        printf("6. Anotar un estudiante a una materia\n");
+        printf("7. Cargar la nota de un estudiante\n");
         printf("8. Imprimir las materias en curso de un estudiante\n");
-        printf("9. Ver las estadisticas de una materias\n");
+        printf("9. Ver las estadisticas de una materia\n");
         printf("10. Ver todos los estudiantes\n");
         printf("11 Ver cantidad de estudiantes\n");
         printf("12. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
-                printf("Nombre de la materia: ");
+                printf("Nombre de la materia (ej: Fisica I): ");
                 scanf("%s",nombre);
                 printf("ID de la materia: ");
                 scanf("%i",&dni);
@@ -221,7 +218,7 @@ int main(){
                 estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                 materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, apellido);
                 if(estudiantePrueba != NULL && materiaPrueba != NULL){
-                    anotarMateria(materiaPrueba, estudiantePrueba);
+                    anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
                 }
                 break;
             case 7:
@@ -249,7 +246,7 @@ int main(){
                 }
                 break;
             case 9:
-                printf("Escribe el nombre de la materia que deseas obtener: ");
+                printf("Escribe el nombre de la materia que deseas obtener (ej: Algebra I): ");
                 scanf("%s", nombre);
                 materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, nombre);
                 if(materiaPrueba != NULL){

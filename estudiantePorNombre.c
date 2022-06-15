@@ -15,18 +15,6 @@ typedef struct EstudiantePorNombre {
 int tamanioDeNombres = 0;
 
 /**
- * Comprueba que el numero de dni tenga 8 dígitos.
- * @param dni
- * @return
- */
-int comprobarDni(int dni) {
-    if ((dni >= 10000000) && (dni < 100000000)) {
-        return 0;
-    }
-    return -1;
-}
-
-/**
  * Inicializa un materia de estudiante con sus datos pasados como parametro,
  * y 'siguiente' referenciando a 'NULL'.
  * @param
@@ -113,7 +101,6 @@ EstudiantePorNombre *obtenerEstudianteNombreCompleto(EstudiantePorNombre **lista
         estudiante = estudiante->siguiente;
     }
     if (compararNombreCompleto(estudiante, estudianteAAgregar) != 0) {
-        printf("El estudiante de nombre: %s %s, no existe en la listaNombre.\n", nombre, apellido);
         free(estudianteAAgregar);
         return NULL;
     } else {
@@ -135,7 +122,6 @@ EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **listaNombr
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->nombre, nombre) != 0) {
-        printf("El nombre: %s, no existe en la listaNombre.\n", nombre);
         return NULL;
     } else {
         return estudiante;
@@ -157,7 +143,6 @@ EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **listaNom
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->apellido, apellido) != 0) {
-        printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
         return NULL;
     } else {
         return estudiante;
