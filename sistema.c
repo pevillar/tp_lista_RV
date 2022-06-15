@@ -198,10 +198,14 @@ int main(){
             case 4:
                 printf("Escribe el minimo de edad: ");
                 scanf("%i",&anio);
-                printf("\nEscribe el maximo de edad: ");
+                printf("Escribe el maximo de edad: ");
                 scanf("%i", &mes);
                 printf("\n");
-                buscarEstudiantePorRangoEdad(&listaEstudiantes,anio,mes);
+                if(listaEstudiantes != NULL){
+                    buscarEstudiantePorRangoEdad(&listaEstudiantes,anio,mes);
+                }else{
+                    printf("La lista de estudiantes esta vacia.\n\n");
+                }
                 break;
             case 5:
                 listarMaterias(listaDeMaterias);
