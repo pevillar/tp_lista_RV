@@ -234,8 +234,9 @@ void anotarMateria(Materia *materia, Estudiante *estudiante) {
 
 void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
     MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
-    cargarNota(materiaBuscada, nota);
-
+    if(materiaBuscada != NULL){
+        cargarNota(materiaBuscada, nota);
+    }
 }
 
 /**

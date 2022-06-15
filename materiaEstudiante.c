@@ -107,15 +107,10 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
 }
 
 /*int main(){
-
-
     Materia *listaMaterias = NULL;
     agregarMateria(&listaMaterias, "Sistema De Representaciones", 0);
-
     MateriaEstudiante *listaMateriasEstudiante = NULL;
     agregarMateriaEstudiante(&listaMateriasEstudiante, listaMaterias);
-
     imprimirMateriasEstudiante(listaMateriasEstudiante);
-
     return 0;
 }*/

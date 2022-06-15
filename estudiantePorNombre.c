@@ -72,12 +72,12 @@ void agregarPorNombre(EstudiantePorNombre **listaNombre, Estudiante *estudianteE
     EstudiantePorNombre *nuevoEstudiante = crearEstudianteNombre(estudianteEdad, nombre, apellido);
     EstudiantePorNombre *cursor = *listaNombre;
     if ((cursor == NULL) ||
-    (compararNombreCompleto(nuevoEstudiante, cursor) < 0)){
+        (compararNombreCompleto(nuevoEstudiante, cursor) < 0)){
         nuevoEstudiante->siguiente = *listaNombre;
         *listaNombre = nuevoEstudiante;
     } else {
         while ((cursor->siguiente != NULL) &&
-        (compararNombreCompleto(nuevoEstudiante, cursor->siguiente) > 0)){
+               (compararNombreCompleto(nuevoEstudiante, cursor->siguiente) > 0)){
             cursor = cursor->siguiente;
         }
         if (cursor->siguiente != NULL){
@@ -107,7 +107,7 @@ EstudiantePorNombre *obtenerEstudiantePorPosicionNombre(EstudiantePorNombre **li
 EstudiantePorNombre *obtenerEstudianteNombreCompleto(EstudiantePorNombre **listaNombre, char *nombre, char *apellido) {
     EstudiantePorNombre *estudiante = *listaNombre;
     EstudiantePorNombre *estudianteAAgregar
-    = crearEstudianteNombre(estudiante->estudianteEdad, nombre, apellido);
+            = crearEstudianteNombre(estudiante->estudianteEdad, nombre, apellido);
     while((estudiante->siguiente != NULL)
           && compararNombreCompleto(estudiante, estudianteAAgregar) != 0){
         estudiante = estudiante->siguiente;
@@ -131,7 +131,7 @@ EstudiantePorNombre *obtenerEstudianteNombreCompleto(EstudiantePorNombre **lista
 EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **listaNombre, char *nombre){
     EstudiantePorNombre *estudiante = *listaNombre;
     while((estudiante->siguiente != NULL)
-    && strcmp(estudiante->nombre, nombre) != 0){
+          && strcmp(estudiante->nombre, nombre) != 0){
         estudiante = estudiante->siguiente;
     }
     if (strcmp(estudiante->nombre, nombre) != 0) {
@@ -202,7 +202,7 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
         EstudiantePorNombre *estudiante = listaNombre;
         EstudiantePorNombre *aEliminar;
         while ((estudiante->siguiente != NULL)
-        && (strcmp(estudiante->siguiente->nombre, nombre) != 0)) {
+               && (strcmp(estudiante->siguiente->nombre, nombre) != 0)) {
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
@@ -223,7 +223,7 @@ void borrarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellid
         EstudiantePorNombre *estudiante = listaNombre;
         EstudiantePorNombre *aEliminar;
         while((estudiante->siguiente != NULL)
-        && (strcmp(estudiante->siguiente->apellido, apellido) != 0)){
+              && (strcmp(estudiante->siguiente->apellido, apellido) != 0)){
             estudiante = estudiante->siguiente;
         }
         if (strcmp(estudiante->apellido, apellido) != 0) {

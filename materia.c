@@ -153,13 +153,13 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
 }
 
 void obtenerPromedioDeAprobados(Materia *materia){
-    int promedioDeAprobados = (materia->cantDeAprobados*100)/materia->cantDeEstudiantesRendieron;
-    printf("El promedio de aprobacion es del %i%", promedioDeAprobados);
+    float promedioDeAprobados = (materia->cantDeAprobados*100)/materia->cantDeEstudiantesRendieron;
+    printf("El promedio de aprobacion es del %.2f\n", promedioDeAprobados);
 }
 
 void obtenerNotaPromedio(Materia *materia){
-    int notaPromedio = (materia->notas*100)/materia->cantDeEstudiantesRendieron;
-    printf("El promedio de aprobacion es del %i%", notaPromedio);
+    float notaPromedio = (materia->notas*100)/materia->cantDeEstudiantesRendieron;
+    printf("La nota promedio en es %.2f\n", notaPromedio);
 }
 
 void imprimirMaterias(Materia *listaMateria) {

@@ -102,5 +102,3 @@ void imprimir(Nodo *lista) {
     }
     printf("\n");
 }
-
-
