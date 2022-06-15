@@ -24,7 +24,7 @@ int comprobarNacimiento(int *anio, int *mes, int *dia);
 int comprobarDia(int *mes, int *dia, int *anio);
 int bisiento(int *anio);
 void imprimirEstudiante(Estudiante *estudiante);
-
+int obtenerEdad(struct tm fechaActual, int anio, int mes, int dia);
 
 /**
  * Inicializa un Estudiante con su valor pasado como parametro, y 'siguiente'
@@ -94,7 +94,8 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
     while(ComprobarDni(&dni) == 0);
     char *nacimiento = obtenerNacimiento(&anio, &mes, &dia);
     time_t fecha = time(NULL);
-    int edad = (localtime(&fecha)->tm_year)+1900-anio;
+    struct tm fechaActual = *localtime(&fecha);
+    int edad = obtenerEdad(fechaActual,anio,mes,dia);
     Estudiante *nuevoEstudiante = crearEstudiante(nombre, apellido, edad, dni, nacimiento);
     Estudiante *cursor = *lista;
 
@@ -112,6 +113,16 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
     }
     tamanio++;
     return nuevoEstudiante;
+}
+
+int obtenerEdad(struct tm fechaActual, int anio,int mes, int dia) {
+    int edad = fechaActual.tm_year+1900-anio;
+    if(fechaActual.tm_mon+1-mes<0){
+        edad--;
+    }else if(fechaActual.tm_mday-dia<0){
+        edad--;
+    }
+    return edad;
 }
 
 int comprobarNacimiento(int *anio, int *mes, int *dia) {
