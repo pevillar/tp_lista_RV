@@ -30,9 +30,7 @@ EstudiantePorNombre *crearEstudianteNombre(Estudiante *estudianteEdad, char *nom
 }
 
 /**
- * Compara alfabeticamente los nombres completos de los estudiantes pasados
- * como parámetro, primero compara apellidos, y si son iguales compara los
- * nombres.
+ * Compara alfabeticamente los nombres completos de dos estudiantes.
  * @param apellido1
  * @param nombre1
  * @param apellido2
@@ -77,21 +75,12 @@ void agregarPorNombre(EstudiantePorNombre **listaNombre, Estudiante *estudianteE
 }
 
 /**
- * Se obtiene el estudiante en la posicion pasada como parametro.
+ * Devuelve el estudiante con el nombre correspondiente, si este existe en la lista.
  * @param listaNombre
- * @param posicion: debe estar entre los valores 1 y tamanioDeNombres de la listaNombre
- * @return: nodo en la posicion
+ * @param nombre
+ * @param apellido
+ * @return
  */
-EstudiantePorNombre *obtenerEstudiantePorPosicionNombre(EstudiantePorNombre **listaNombre, int posicion){
-    EstudiantePorNombre *estudiante = *listaNombre;
-    if(posicion>0 && posicion <= tamanioDeNombres){
-        for (int i = 0; i < (posicion - 1); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-        return estudiante;
-    }
-}
-
 EstudiantePorNombre *obtenerEstudianteNombreCompleto(EstudiantePorNombre **listaNombre, char *nombre, char *apellido) {
     EstudiantePorNombre *estudiante = *listaNombre;
     EstudiantePorNombre *estudianteAAgregar
@@ -110,45 +99,9 @@ EstudiantePorNombre *obtenerEstudianteNombreCompleto(EstudiantePorNombre **lista
 }
 
 /**
- * Se obtiene el primer estudiante en la listaNombre con el materia pasado como parametro.
+ * Elilmina el primer estudiante de la lista.
  * @param listaNombre
- * @param valor: valor del nodo a buscar.
- * @return: nodo en la posicion (parametro)
  */
-EstudiantePorNombre *obtenerEstudiantePorNombre(EstudiantePorNombre **listaNombre, char *nombre){
-    EstudiantePorNombre *estudiante = *listaNombre;
-    while((estudiante->siguiente != NULL)
-          && strcmp(estudiante->nombre, nombre) != 0){
-        estudiante = estudiante->siguiente;
-    }
-    if (strcmp(estudiante->nombre, nombre) != 0) {
-        return NULL;
-    } else {
-        return estudiante;
-    }
-}
-
-/**
- * Se obtiene el primer estudiante en la listaNombre con el apellido pasado como
- * parametro.
- * @param listaNombre
- * @param apellido
- * @return primer estudiante en la listaNombre con el apellido pasado como
- * parametro.
- */
-EstudiantePorNombre *obtenerEstudiantePorApellido(EstudiantePorNombre **listaNombre, char *apellido){
-    EstudiantePorNombre *estudiante = *listaNombre;
-    while((estudiante->siguiente != NULL)
-          && strcmp(estudiante->apellido, apellido) != 0){
-        estudiante = estudiante->siguiente;
-    }
-    if (strcmp(estudiante->apellido, apellido) != 0) {
-        return NULL;
-    } else {
-        return estudiante;
-    }
-}
-
 void borrarPrimerEstudiante(EstudiantePorNombre *listaNombre) {
     if (listaNombre->siguiente != NULL) {
         *listaNombre = *listaNombre->siguiente;
@@ -160,26 +113,11 @@ void borrarPrimerEstudiante(EstudiantePorNombre *listaNombre) {
 }
 
 /**
- * Elimina el estudiante en la posicion pasada como parametro
+ * Elimina El estudiante con el nombre pasado como parametro.
  * @param listaNombre
- * @param posicion: entre los valores 1 y 'tamanioDeNombres' de listaNombre
+ * @param nombre
+ * @param apellido
  */
-void borrarEstudiantePorPosicion(EstudiantePorNombre *listaNombre, int posicion) {
-    EstudiantePorNombre *estudiante = listaNombre;
-    EstudiantePorNombre *aEliminar;
-    if ((posicion - 1) == 0) {
-        borrarPrimerEstudiante(listaNombre);
-    } else if(posicion>0 && posicion <= tamanioDeNombres){
-        for (int i = 0; i < (posicion - 2); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-        aEliminar = estudiante->siguiente;
-        estudiante->siguiente = estudiante->siguiente->siguiente;
-        free(aEliminar);
-    }
-    tamanioDeNombres--;
-}
-
 void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre, char *apellido) {
     EstudiantePorNombre *estudiante = listaNombre;
     EstudiantePorNombre *estudiante2
@@ -205,6 +143,10 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre, c
     free(estudiante2);
 }
 
+/**
+ * Imrpime por consola el nombre completo de cada estudiante en la lista.
+ * @param listaNombre
+ */
 void imprimirListaPorNombre(EstudiantePorNombre *listaNombre) {
     while (listaNombre != NULL) {
         printf("%s, %s.\n", listaNombre->apellido, listaNombre->nombre);

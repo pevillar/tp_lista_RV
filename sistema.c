@@ -5,6 +5,17 @@
 #include "estudiantePorNombre.c"
 #include "datosParaSimular.c"
 
+/**
+ * Crea un nuevo estudiante y lo agrega al sistema.
+ * @param lista
+ * @param listaNombre
+ * @param nombre
+ * @param apellido
+ * @param anio
+ * @param mes
+ * @param dia
+ * @param dni
+ */
 void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char *nombre, char *apellido, int anio, int mes, int dia, int dni) {
     char *nombreCopia = (char*) malloc(50*sizeof(char));
     strcpy(nombreCopia,nombre);
@@ -14,10 +25,21 @@ void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, 
     agregarPorNombre(listaNombre,nuevoEstudiante, nombreCopia, apellidoCopia);
 }
 
+/**
+ * Imprime el nombre completo de cada estudiante cargado en el sistema.
+ * @param lista
+ */
 void imprimirEstudiantes(EstudiantePorNombre *lista) {
     imprimirListaPorNombre(lista);
 }
 
+/**
+ * Devuelve el estudiante con el nombre correspondiente.
+ * @param listaNombre
+ * @param nombre
+ * @param apellido
+ * @return
+ */
 Estudiante *buscarEstudiantePorNombreCompleto(EstudiantePorNombre *listaNombre, char *nombre, char *apellido) {
     EstudiantePorNombre *estudianteN = obtenerEstudianteNombreCompleto(&listaNombre, nombre, apellido);
     if(estudianteN == NULL){
@@ -28,34 +50,31 @@ Estudiante *buscarEstudiantePorNombreCompleto(EstudiantePorNombre *listaNombre, 
     }
 }
 
+/**
+ * Borrra un estudiante del sistema.
+ * @param listaPorEdad
+ * @param listaPorNombre
+ * @param nombre
+ * @param apellido
+ */
 void eliminarUnEstudiante(Estudiante *listaPorEdad, EstudiantePorNombre *listaPorNombre, char *nombre, char *apellido){
     borrarEstudiantePorNombreEdad(listaPorEdad, nombre, apellido);
     borrarEstudiantePorNombre(listaPorNombre, nombre, apellido);
 }
 
-Estudiante *buscarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
-    EstudiantePorNombre *estudianteN = obtenerEstudiantePorNombre(&listaNombre, nombre);
-    if (estudianteN == NULL) {
-        printf("No existe el estudiante de nombre: %s, en el sistema.\n", nombre);
-        return NULL;
-    } else {
-        return estudianteN->estudianteEdad;
-    }
-}
-Estudiante *buscarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellido) {
-    EstudiantePorNombre *estudianteN = obtenerEstudiantePorApellido(&listaNombre, apellido);
-    if(estudianteN == NULL){
-        printf("No existe el estudiante de apellido: %s, en el sistema.\n", apellido);
-        return NULL;
-    }else{
-        return estudianteN->estudianteEdad;
-    }
-}
-
+/**
+ * Devuelve el/los estudiante/s en el rango de edad establecido.
+ * @param lista
+ * @param edadMinima
+ * @param edadMaxima
+ */
 void buscarEstudiantePorRangoEdad(Estudiante **lista, int edadMinima, int edadMaxima) {
     obtenerEstudiantePorRangoDeEdad(lista, edadMinima, edadMaxima);
 }
 
+/**
+ * Devuelve la cantidad de estudiantes cargados en el sistema.
+ */
 void obtenerCantidadDeEstudiantes(){
     if(tamanio == 1){
         printf("Hay un estudiante cargado en el sistema.\n");
@@ -64,6 +83,10 @@ void obtenerCantidadDeEstudiantes(){
     }
 }
 
+/**
+ * Imprime por consola todas la materias existentes en el sistema.
+ * @param listaMaterias
+ */
 void listarMaterias(Materia *listaMaterias) {
     if(listaMaterias != NULL){
         imprimirMaterias(listaMaterias);
@@ -72,12 +95,22 @@ void listarMaterias(Materia *listaMaterias) {
     }
 }
 
+/**
+ * Agrega una materia al sistema.
+ * @param materia
+ * @param nombre
+ * @param numero
+ */
 void cargarMateria(Materia **materia, char *nombre, int numero){
     char *nombreCopia = (char*) malloc(60*sizeof(char));
     strcpy(nombreCopia,nombre);
     agregarMateria(materia,nombreCopia, numero);
 }
 
+/**
+ * Imprime el promedio de aprovados y la nota promedio de una materia.
+ * @param materia
+ */
 void obtenerEstadisticas(Materia *materia){
     if(materia->cantDeEstudiantesRendieron == 0){
         printf("Nadie ha rendido esta materia todavia\n");
@@ -110,37 +143,6 @@ void convertirAMinuscula(char *cadena) {
 
 int main(){
 
-/*Estudiante *lista = NULL;
-    EstudiantePorNombre *listaNombre = NULL;
-    darDeAltaEstudiante(&lista, &listaNombre, "Pepito", "Guzman", 1989, 10, 5, 45786812);
-    darDeAltaEstudiante(&lista,&listaNombre, "Jorge", "Fiel", 1987, 10, 5, 49689238);
-    darDeAltaEstudiante(&lista,&listaNombre, "Julio", "Fiel", 1987, 10, 5, 49689248);
-    darDeAltaEstudiante(&lista,&listaNombre, "Abril", "Gomez", 1987, 10, 5, 49689258);
-    darDeAltaEstudiante(&lista,&listaNombre, "Azul", "Perez", 1987, 10, 5, 49689268);
-    darDeAltaEstudiante(&lista,&listaNombre, "Maria", "Munoz", 1999, 10, 5, 49789823);
-    darDeAltaEstudiante(&lista,&listaNombre, "Rocio", "Rodriguez", 2004, 10, 5, 49768923);
-    Estudiante *estPrueba = buscarEstudiantePorNombre(listaNombre, "Jorge");
-    printf("Jorge: %s\n", estPrueba->apellido);
-    estPrueba = buscarEstudiantePorApellido(listaNombre, "Rodriguez");
-    printf("Rodriguez: %s\n", estPrueba->nombre);
-    buscarEstudiantePorRangoEdad(&lista, 22, 34);
-    printf("El estudiante %s %s fue encontrado\n", obtenerEstudiantePorEdad(&lista, 35,49689258 )->nombre,obtenerEstudiantePorEdad(&lista, 35,49689258 )->apellido);
-    obtenerCantidadDeEstudiantes();
-    imprimirEstudiantes(listaNombre);
-    borrarEstudiantePorEdad(lista, 35, 49689258);
-    Estudiante *estPrueba1= obtenerEstudiantePorEdad(&lista, 35,49689258 );
-    if(estPrueba1 != NULL) {
-        printf("El estudiante %s %s fue encontrado\n",obtenerEstudiantePorEdad(&lista, 35,49689258)->nombre, obtenerEstudiantePorEdad(&lista, 35,49689258)->apellido);
-    }
-    Materia *listaMaterias = NULL;
-    cargarMateria(&listaMaterias, "Sistema De Representaciones", 1);
-    cargarMateria(&listaMaterias, "Analisis", 3);
-    cargarMateria(&listaMaterias, "Algoritmos y programacion", 2);
-    cargarMateria(&listaMaterias, "Algebra", 4);
-    printf("La materia Algebra es la numero %i \n",obtenerMateriaPorNombre(&listaMaterias, "Algebra")->numero);
-    listarMaterias(listaMaterias);*/
-//------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     Materia *listaDeMaterias = NULL;
     Estudiante *listaEstudiantes = NULL;
     EstudiantePorNombre *listaEstudiantesNombre = NULL;
@@ -157,27 +159,6 @@ int main(){
     int dia;
     int dni;
 
-   /* nombre = "Jose";
-    apellido = "Muñoz";
-    anio = 2003;
-    mes = 2;
-    dia = 5;
-    dni = 43874800;
-    materiaNombre = "fisica 1";
-
-    cargarMateria(&listaDeMaterias, materiaNombre, mes);
-    materiaNombre = "fisica 1";
-    cargarMateria(&listaDeMaterias, "fisica 2", dia);
-    darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
-    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
-    materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
-    anotarEstudianteAMateria(materiaPrueba->siguienteMateria, estudiantePrueba);
-    anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
-    cargarNotaAMateria(materiaNombre, estudiantePrueba, 0);
-    cargarNotaAMateria(materiaNombre, estudiantePrueba, 1);
-    cargarNotaAMateria(materiaNombre, estudiantePrueba, 3);
-    imprimirTodasLasMaterias(estudiantePrueba);
-*/
     while(opcion != 15){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
                "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
