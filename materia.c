@@ -124,7 +124,7 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
 
 void obtenerPromedioDeAprobados(Materia *materia){
     double promedioDeAprobados = (materia->cantDeAprobados*100.0)/materia->cantDeEstudiantesRendieron;
-    printf("El promedio de aprobacion es del %.2f\n", promedioDeAprobados);
+    printf("El promedio de aprobacion es del %.2f%\n", promedioDeAprobados);
 }
 
 void obtenerNotaPromedio(Materia *materia){
