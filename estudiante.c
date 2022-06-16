@@ -168,12 +168,27 @@ void imprimirEstudiante(Estudiante *estudiante){
     printf("------------------------------------------");
 }
 
-void imprimirMateriasCusrsando(Estudiante *estudiante) {
+void imprimirMateriasEnCurso(Estudiante *estudiante){
     if(estudiante->materiasEnCurso != NULL) {
+        printf("\nMaterias Cursando: \n");
         imprimirMateriasEstudiante(estudiante->materiasEnCurso);
     }else{
         printf("el estudiante %S %S no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
     }
+}
+
+void imprimirMateriasAprobadas(Estudiante *estudiante){
+    if(estudiante->materiasAprobadas != NULL) {
+        printf("Materias Aprobadas: \n");
+        imprimirMateriasAprobadasEstudiante(estudiante->materiasAprobadas);
+    }else{
+        printf("el estudiante %S %S no ha aprobado ninguna materia.", estudiante->nombre, estudiante->apellido);
+    }
+}
+
+void imprimirTodasLasMaterias(Estudiante *estudiante){
+    imprimirMateriasEnCurso(estudiante);
+    imprimirMateriasAprobadas(estudiante);
 }
 
 void imprimir(Estudiante *lista) {
@@ -253,8 +268,8 @@ void obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int eda
     }
 }
 
-void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
-    agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
+void agregarMateriaAprobada(MateriaEstudiante *materiaAprobada, Estudiante *estudiante) {
+    agregarMateriaEstudianteAprobada(&estudiante->materiasAprobadas, materiaAprobada->materia, materiaAprobada->nota, materiaAprobada->intentos);
 }
 
 void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
@@ -266,6 +281,12 @@ void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
         MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
         if(materiaBuscada != NULL){
             cargarNota(materiaBuscada, nota);
+            if(materiaBuscada->intentos <= 3 && materiaBuscada->aprobado == 1){
+                agregarMateriaAprobada(materiaBuscada, estudiante);
+                borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+            }else if(materiaBuscada->intentos == 3){
+                borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+            }
         }
     }else{
         printf("El estudiante %s %s no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
@@ -317,4 +338,47 @@ void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
     estudiante->siguiente = estudiante->siguiente->siguiente;
     free(aEliminar);
     tamanio--;
+}
+
+void borrarPrimerEstudianteEdad(Estudiante *listaNombre) {
+    if (listaNombre->siguiente != NULL) {
+        *listaNombre = *listaNombre->siguiente;
+        tamanio--;
+    } else {
+        listaNombre = NULL;
+        tamanio--;
+    }
+}
+
+int compararNombres(Estudiante *estudiante1, Estudiante *estudiante2){
+    if (strcmp(estudiante1->apellido, estudiante2->apellido) == 0){
+        return strcmp(estudiante1->nombre, estudiante2->nombre);
+    } else {
+        return strcmp(estudiante1->apellido, estudiante2->apellido);
+    }
+}
+
+void borrarEstudiantePorNombreEdad(Estudiante *listaNombre, char *nombre, char *apellido) {
+    Estudiante *estudiante = listaNombre;
+    Estudiante *estudiante2
+            = crearEstudiante(nombre, apellido, 20, 45781369, "2-4-2002");
+    if (compararNombres(estudiante, estudiante2) == 0){
+        borrarPrimerEstudianteEdad(listaNombre);
+    } else {
+        Estudiante *aEliminar;
+        while ((estudiante->siguiente != NULL)
+               && (compararNombres(estudiante->siguiente, estudiante2)) != 0) {
+            estudiante = estudiante->siguiente;
+        }
+        if ((estudiante->siguiente == NULL) ||
+            compararNombres(estudiante->siguiente, estudiante2) != 0) {
+            printf("El estudiante: %s %s, no existe en el sistema.", nombre, apellido);
+        } else {
+            aEliminar = estudiante->siguiente;
+            estudiante->siguiente = estudiante->siguiente->siguiente;
+            free(aEliminar);
+            tamanio--;
+        }
+    }
+    free(estudiante2);
 }

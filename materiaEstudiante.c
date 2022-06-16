@@ -9,19 +9,31 @@ typedef struct MateriaEstudiante {
     Materia *materia;
     int aprobado;
     int nota;
+    int intentos;
 } MateriaEstudiante;
 
 int tamanioMateriaEstudiante = 0;
 
 void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
-    if(nota>=0 && nota<=10){
-        materiaEstudiante -> nota = nota;
-        materiaEstudiante -> aprobado = (nota>=4) ? 1 : 0;
-        materiaEstudiante -> materia -> notas += nota;
-        materiaEstudiante -> materia -> cantDeAprobados += (nota>=4) ? 1 : 0;
-        materiaEstudiante -> materia -> cantDeEstudiantesRendieron ++;
-    }else{
-        printf("la nota no es valida");
+    if (nota >= 0 && nota <= 10) {
+        if(materiaEstudiante->nota == 0 && materiaEstudiante->intentos == 0) {
+            materiaEstudiante->nota = nota;
+            materiaEstudiante->intentos++;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
+            materiaEstudiante->materia->notas += nota;
+            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
+            materiaEstudiante->materia->cantDeEstudiantesRendieron++;
+        }else if(materiaEstudiante->nota >= nota && materiaEstudiante->nota < 4 && materiaEstudiante->intentos < 3){
+            materiaEstudiante->intentos++;
+        }else if(materiaEstudiante->nota < nota && materiaEstudiante->intentos < 3){
+            materiaEstudiante->intentos++;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
+            materiaEstudiante->materia->notas += nota - materiaEstudiante->nota;
+            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
+            materiaEstudiante->nota = nota;
+        }
+    }else {
+        printf("la nota no es valida\n");
     }
 }
 
@@ -29,17 +41,27 @@ MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     MateriaEstudiante *nuevaMateria = (MateriaEstudiante*) malloc(sizeof (MateriaEstudiante));
     nuevaMateria -> nota = -1;
     nuevaMateria -> aprobado = -1;
+    nuevaMateria -> intentos = 0;
     nuevaMateria -> siguienteMateriaEstudiante = NULL;
     nuevaMateria -> materia = materia;
-    nuevaMateria -> materia -> cantDeEstudiantes++;
     return nuevaMateria;
 }
 
-void *agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *materia ){
-    MateriaEstudiante  *nuevoMateria = crearMateriaEstudiante(materia);
-    nuevoMateria->siguienteMateriaEstudiante = *materiaEstudiante;
-    *materiaEstudiante = nuevoMateria;
+void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *materia ){
+    MateriaEstudiante  *nuevaMateria = crearMateriaEstudiante(materia);
+    nuevaMateria->materia->cantDeEstudiantes++;
+    nuevaMateria->siguienteMateriaEstudiante = *materiaEstudiante;
+    *materiaEstudiante = nuevaMateria;
     tamanioMateriaEstudiante++;
+}
+
+void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Materia *materia, int nota, int intentos){
+    MateriaEstudiante  *nuevaMateria = crearMateriaEstudiante(materia);
+    nuevaMateria->nota = nota;
+    nuevaMateria->aprobado = 1;
+    nuevaMateria->intentos = intentos;
+    nuevaMateria->siguienteMateriaEstudiante = *materiaEstudiante;
+    *materiaEstudiante = nuevaMateria;
 }
 
 MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMateria, char *nombre){
@@ -49,7 +71,7 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
         materia = materia->siguienteMateriaEstudiante;
     }
     if (strcmp(materia->materia->nombre, nombre) != 0) {
-        printf("La materia: %s, no existe en la listaMateria.\n", nombre);
+        printf("La materia: %s, no existe en el sistema.\n", nombre);
         return NULL;
     } else {
         return materia;
@@ -57,36 +79,38 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
 }
 
 void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
+    MateriaEstudiante *aEliminar = listaNombre->siguienteMateriaEstudiante;
     if (listaNombre->siguienteMateriaEstudiante != NULL) {
         *listaNombre = *listaNombre->siguienteMateriaEstudiante;
-        tamanioMateriaEstudiante--;
     } else {
         listaNombre = NULL;
-        tamanioMateriaEstudiante--;
     }
+    free(aEliminar);
+    tamanioMateriaEstudiante--;
 }
 
 
-/*void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nombre) {
-    if (strcmp(listaNombre->materia->nombre, nombre) == 0){
-        borrarPrimeraMateria(listaNombre);
+void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nombre) {
+    MateriaEstudiante *materiaEstudiante = listaNombre;
+    if (strcmp(materiaEstudiante->materia->nombre, nombre) == 0){
+        borrarPrimeraMateriaEstudiante(listaNombre);
     } else {
-        MateriaEstudiante *estudiante = listaNombre;
         MateriaEstudiante *aEliminar;
-        while ((estudiante->siguienteMateriaEstudiante != NULL)
-               && (strcmp(estudiante->siguienteMateriaEstudiante->materia->nombre, nombre) != 0)) {
-            estudiante = estudiante->siguienteMateriaEstudiante;
+        while ((materiaEstudiante->siguienteMateriaEstudiante != NULL)
+               && (strcmp(materiaEstudiante->siguienteMateriaEstudiante->materia->nombre, nombre)) != 0) {
+            materiaEstudiante = materiaEstudiante->siguienteMateriaEstudiante;
         }
-        if (strcmp(estudiante->materia->nombre, nombre) != 0) {
-            printf("El materia: %s, no existe en la listaNombre.\n", nombre);
+        if ((materiaEstudiante->siguienteMateriaEstudiante == NULL) ||
+            strcmp(materiaEstudiante->siguienteMateriaEstudiante->materia->nombre, nombre) != 0) {
+            printf("\n");
         } else {
-            aEliminar = estudiante->siguienteMateriaEstudiante;
-            estudiante->siguienteMateriaEstudiante = estudiante->siguienteMateriaEstudiante->siguienteMateriaEstudiante;
+            aEliminar = materiaEstudiante->siguienteMateriaEstudiante;
+            materiaEstudiante->siguienteMateriaEstudiante = materiaEstudiante->siguienteMateriaEstudiante->siguienteMateriaEstudiante;
             free(aEliminar);
             tamanioMateriaEstudiante--;
         }
     }
-}*/
+}
 
 void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
@@ -95,10 +119,14 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
             printf("El alumno esta cursando la materia\n");
         }else{
             printf("Nota: %i\n", listaMateria->nota);
-            if(listaMateria->aprobado == 1){
-                printf("El alumno ha aprobado la materia");
-            }else{
-                printf("El alumno ha desaprobado la materia");
+            if(listaMateria->aprobado == 0){
+                printf("El alumno ha desaprobado la materia\n");
+                int intentosRestantes = 3 - listaMateria->intentos;
+                if(intentosRestantes == 1){
+                    printf("Le queda un intento!!\n");
+                }else{
+                    printf("Le quedan %i intentos\n", intentosRestantes);
+                }
             }
         }
         listaMateria = listaMateria->siguienteMateriaEstudiante;
@@ -106,11 +134,11 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     printf("\n");
 }
 
-/*int main(){
-    Materia *listaMaterias = NULL;
-    agregarMateria(&listaMaterias, "Sistema De Representaciones", 0);
-    MateriaEstudiante *listaMateriasEstudiante = NULL;
-    agregarMateriaEstudiante(&listaMateriasEstudiante, listaMaterias);
-    imprimirMateriasEstudiante(listaMateriasEstudiante);
-    return 0;
-}*/
+void imprimirMateriasAprobadasEstudiante(MateriaEstudiante *listaMateria) {
+    while (listaMateria != NULL) {
+        printf("%s\n", listaMateria->materia->nombre);
+        printf("Nota: %i\n", listaMateria->nota);
+        listaMateria = listaMateria->siguienteMateriaEstudiante;
+    }
+    printf("\n");
+}
