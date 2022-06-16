@@ -302,7 +302,7 @@ void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
  * @param estudiante
  * @param nota
  */
-void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
+void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, double nota) {
     if(estudiante->materiasEnCurso != NULL){
         MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
         if(materiaBuscada != NULL){

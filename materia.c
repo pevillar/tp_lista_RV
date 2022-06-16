@@ -9,7 +9,7 @@ typedef struct Materia {
     int cantDeAprobados;
     int cantDeEstudiantes;
     int cantDeEstudiantesRendieron;
-    int notas;
+    double notas;
     int numero;
 } Materia;
 
@@ -123,12 +123,12 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
 }
 
 void obtenerPromedioDeAprobados(Materia *materia){
-    double promedioDeAprobados = (materia->cantDeAprobados*100)*1.0/materia->cantDeEstudiantesRendieron;
+    double promedioDeAprobados = (materia->cantDeAprobados*100.0)/materia->cantDeEstudiantesRendieron;
     printf("El promedio de aprobacion es del %.2f\n", promedioDeAprobados);
 }
 
 void obtenerNotaPromedio(Materia *materia){
-    double notaPromedio = (materia->notas*100)*1.0/materia->cantDeEstudiantesRendieron;
+    double notaPromedio = (materia->notas*10.0)/(materia->cantDeEstudiantesRendieron*10.0);
     printf("La nota promedio en es %.2f\n", notaPromedio);
 }
 

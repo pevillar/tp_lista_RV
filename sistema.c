@@ -158,6 +158,7 @@ int main(){
     int mes;
     int dia;
     int dni;
+    double nota;
 
     while(opcion != 15){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
@@ -269,11 +270,11 @@ int main(){
                 pedirDatoConFgets(materiaNombre);
                 convertirAMinuscula(materiaNombre);
                 printf("Escribe la nota: ");
-                scanf("%i", &dni);
+                scanf("%i", &nota);
                 if(listaEstudiantesNombre != NULL){
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     if(estudiantePrueba != NULL){
-                        cargarNotaAMateria(materiaNombre, estudiantePrueba, dni);
+                        cargarNotaAMateria(materiaNombre, estudiantePrueba, nota);
                     }
                 }else{
                     printf("Todavia no hay ningun estudiante cargado en el sistema.\n");

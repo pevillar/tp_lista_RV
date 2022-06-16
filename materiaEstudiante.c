@@ -8,18 +8,18 @@ typedef struct MateriaEstudiante {
     struct MateriaEstudiante *siguienteMateriaEstudiante;
     Materia *materia;
     int aprobado;
-    int nota;
+    double nota;
     int intentos;
 } MateriaEstudiante;
 
 int tamanioMateriaEstudiante = 0;
 
-void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
+void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
     if (nota >= 0 && nota <= 10) {
-        if(materiaEstudiante->nota == 0 && materiaEstudiante->intentos == 0) {
+        if(materiaEstudiante->nota == -1 && materiaEstudiante->intentos == 0) {
             materiaEstudiante->nota = nota;
             materiaEstudiante->intentos++;
-            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1.0 : 0;
             materiaEstudiante->materia->notas += nota;
             materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
             materiaEstudiante->materia->cantDeEstudiantesRendieron++;
@@ -27,9 +27,9 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
             materiaEstudiante->intentos++;
         }else if(materiaEstudiante->nota < nota && materiaEstudiante->intentos < 3){
             materiaEstudiante->intentos++;
-            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1.0 : 0;
             materiaEstudiante->materia->notas += nota - materiaEstudiante->nota;
-            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
+            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1.0 : 0;
             materiaEstudiante->nota = nota;
         }
     }else {
@@ -39,7 +39,7 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, int nota){
 
 MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     MateriaEstudiante *nuevaMateria = (MateriaEstudiante*) malloc(sizeof (MateriaEstudiante));
-    nuevaMateria -> nota = -1;
+    nuevaMateria -> nota = -1.0;
     nuevaMateria -> aprobado = -1;
     nuevaMateria -> intentos = 0;
     nuevaMateria -> siguienteMateriaEstudiante = NULL;
@@ -55,7 +55,7 @@ void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *ma
     tamanioMateriaEstudiante++;
 }
 
-void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Materia *materia, int nota, int intentos){
+void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Materia *materia, double nota, int intentos){
     MateriaEstudiante  *nuevaMateria = crearMateriaEstudiante(materia);
     nuevaMateria->nota = nota;
     nuevaMateria->aprobado = 1;
@@ -118,7 +118,7 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
         if(listaMateria->nota == -1){
             printf("El alumno esta cursando la materia\n");
         }else{
-            printf("Nota: %i\n", listaMateria->nota);
+            printf("Nota: %.2f\n", listaMateria->nota);
             if(listaMateria->aprobado == 0){
                 printf("El alumno ha desaprobado la materia\n");
                 int intentosRestantes = 3 - listaMateria->intentos;
@@ -137,7 +137,7 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
 void imprimirMateriasAprobadasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
         printf("%s\n", listaMateria->materia->nombre);
-        printf("Nota: %i\n", listaMateria->nota);
+        printf("Nota: %.2f\n", listaMateria->nota);
         listaMateria = listaMateria->siguienteMateriaEstudiante;
     }
     printf("\n");
