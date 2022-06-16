@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "estudiantePorNombre.c"
+#include "datosParaSimular.c"
 
 void darDeAltaEstudiante(Estudiante **lista, EstudiantePorNombre **listaNombre, char *nombre, char *apellido, int anio, int mes, int dia, int dni) {
     char *nombreCopia = (char*) malloc(50*sizeof(char));
@@ -66,7 +68,7 @@ void listarMaterias(Materia *listaMaterias) {
 }
 
 void cargarMateria(Materia **materia, char *nombre, int numero){
-    char *nombreCopia = (char*) malloc(50*sizeof(char));
+    char *nombreCopia = (char*) malloc(60*sizeof(char));
     strcpy(nombreCopia,nombre);
     agregarMateria(materia,nombreCopia, numero);
 }
@@ -79,11 +81,31 @@ void obtenerEstadisticas(Materia *materia){
         obtenerNotaPromedio(materia);
     }
 }
+/**
+ * Usa la funcion 'fgets()' para pedir un dato por consola y elimina
+ * el '\n' que se genera el final de la cadena.
+ * @param dato: variable que almacena el dato introducido por consola.
+ */
+void pedirDatoConFgets(char *dato) {
+    fgets(dato, 60, stdin);
+    if ((strlen(dato) > 0) && (dato[strlen(dato) - 1] == '\n')) {
+        dato[strlen(dato) - 1] = '\0';
+    }
+}
+
+/**
+ * Convierte todas los caracteres de 'cadena' a minuscula.
+ * @param cadena: una cadena de caracteres.
+ */
+void convertirAMinuscula(char *cadena) {
+    for (int indice = 0; cadena[indice] != '\0'; ++indice){
+        cadena[indice] = tolower(cadena[indice]);
+    }
+}
 
 int main(){
 
-    /*
-    Estudiante *lista = NULL;
+/*Estudiante *lista = NULL;
     EstudiantePorNombre *listaNombre = NULL;
     darDeAltaEstudiante(&lista, &listaNombre, "Pepito", "Guzman", 1989, 10, 5, 45786812);
     darDeAltaEstudiante(&lista,&listaNombre, "Jorge", "Fiel", 1987, 10, 5, 49689238);
@@ -99,8 +121,8 @@ int main(){
     buscarEstudiantePorRangoEdad(&lista, 22, 34);
     printf("El estudiante %s %s fue encontrado\n", obtenerEstudiantePorEdad(&lista, 35,49689258 )->nombre,obtenerEstudiantePorEdad(&lista, 35,49689258 )->apellido);
     obtenerCantidadDeEstudiantes();
-    imprimirEstudiantes(lista);
-    borrarEstudiantePorEdad(&lista, 35, 49689258);
+    imprimirEstudiantes(listaNombre);
+    borrarEstudiantePorEdad(lista, 35, 49689258);
     Estudiante *estPrueba1= obtenerEstudiantePorEdad(&lista, 35,49689258 );
     if(estPrueba1 != NULL) {
         printf("El estudiante %s %s fue encontrado\n",obtenerEstudiantePorEdad(&lista, 35,49689258)->nombre, obtenerEstudiantePorEdad(&lista, 35,49689258)->apellido);
@@ -124,13 +146,13 @@ int main(){
 
     char *nombre = (char*) malloc(50*sizeof(char));
     char *apellido = (char*) malloc(50*sizeof(char));
-    char *materiaNombre = (char*) malloc(50*sizeof(char));
+    char *materiaNombre = (char*) malloc(60*sizeof(char));
     int anio;
     int mes;
     int dia;
     int dni;
 
-/*
+    /*
     nombre = "Jose";
     apellido = "Muñoz";
     anio = 2003;
@@ -146,9 +168,9 @@ int main(){
     dni = 12345678;
     darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, "miguel", apellido);
-    imprimir(estudiantePrueba);
-*/
-    while(opcion != 12){
+    imprimir(estudiantePrueba);*/
+
+    while(opcion != 13){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
                "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
                "para escribir por ejemplo: 'seniales'.\n");
@@ -163,35 +185,41 @@ int main(){
         printf("9. Ver las estadisticas de una materia\n");
         printf("10. Ver todos los estudiantes\n");
         printf("11. Ver cantidad de estudiantes\n");
-        printf("12. Salir\n");
+        printf("12. Cargar sistema de prueba\n");
+        printf("13. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
                 printf("Nombre de la materia (ej: Fisica I): ");
-                scanf("%s",materiaNombre);
+                getc(stdin);
+                pedirDatoConFgets(materiaNombre);
+                convertirAMinuscula(materiaNombre);
                 printf("ID de la materia: ");
                 scanf("%i",&dni);
                 cargarMateria(&listaDeMaterias, materiaNombre, dni);
                 break;
             case 2:
-                printf("Primer nombre del estudiante: ");
-                scanf("%s",nombre);
-                printf("Apellido (uno solo) del estudiante: ");
-                scanf("%s",apellido);
-                printf("fecha de nacimiento (AAAA MM DD):");
+                printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                getc(stdin);
+                pedirDatoConFgets(nombre);
+                printf("Escribe el apellido del estudiante: ");
+                pedirDatoConFgets(apellido);
+                printf("Escribe la fecha de nacimiento (AAAA MM DD):");
                 scanf("%i",&anio);
                 scanf("%i",&mes);
                 scanf("%i",&dia);
-                printf("DNI: ");
+                printf("Escribe el DNI: ");
                 scanf("%i",&dni);
                 darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
                 break;
             case 3:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
                 printf("Escribe el nombre del estudiante: ");
-                scanf("%s", nombre);
+                getc(stdin);
+                pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
-                scanf("%s", apellido);
+                pedirDatoConFgets(apellido);
                 if(listaEstudiantesNombre != NULL) {
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     if (estudiantePrueba != NULL) {
@@ -219,11 +247,13 @@ int main(){
             case 6:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
                 printf("Escribe el nombre del estudiante: ");
-                scanf("%s", nombre);
+                getc(stdin);
+                pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
-                scanf("%s", apellido);
+                pedirDatoConFgets(apellido);
                 printf("Nombre de la materia a anotarse: ");
-                scanf("%s", materiaNombre);
+                pedirDatoConFgets(materiaNombre);
+                convertirAMinuscula(materiaNombre);
                 if(listaEstudiantesNombre != NULL && listaDeMaterias != NULL) {
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
@@ -239,11 +269,13 @@ int main(){
             case 7:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
                 printf("Escribe el nombre del estudiante: ");
-                scanf("%s", nombre);
+                getc(stdin);
+                pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
-                scanf("%s", apellido);
+                pedirDatoConFgets(apellido);
                 printf("Nombre de la materia a anotarse: ");
-                scanf("%s", materiaNombre);
+                pedirDatoConFgets(materiaNombre);
+                convertirAMinuscula(materiaNombre);
                 printf("Escribe la nota: ");
                 scanf("%i", &dni);
                 if(listaEstudiantesNombre != NULL){
@@ -258,13 +290,14 @@ int main(){
             case 8:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
                 printf("Escribe el nombre del estudiante: ");
-                scanf("%s", nombre);
+                getc(stdin);
+                pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
-                scanf("%s", apellido);
+                pedirDatoConFgets(apellido);
                 if(listaEstudiantesNombre != NULL){
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     if(estudiantePrueba != NULL){
-                        imprimirMateriasCusrsando(estudiantePrueba);
+                        imprimirMateriasEnCurso(estudiantePrueba);
                     }
                 }else{
                     printf("Todavia no hay ningun estudiante cargado en el sistema");
@@ -272,7 +305,9 @@ int main(){
                 break;
             case 9:
                 printf("Escribe el nombre de la materia que deseas obtener (ej: Algebra I): ");
-                scanf("%s", materiaNombre);
+                fgetc(stdin);
+                pedirDatoConFgets(materiaNombre);
+                convertirAMinuscula(materiaNombre);
                 if(listaDeMaterias != NULL) {
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
                     if (materiaPrueba != NULL) {
@@ -293,6 +328,16 @@ int main(){
                 obtenerCantidadDeEstudiantes();
                 break;
             case 12:
+                for (int i = 0; i < 164; ++i) {
+                    darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre,
+                                        nombres[i], apellidos[i], anios[i], meses[i],
+                                        dias[i], dnis[i]);
+                }
+                for (int i = 0; i < 45; ++i) {
+                    cargarMateria(&listaDeMaterias, arregloMaterias[i], i + 1);
+                }
+                break;
+            case 13:
                 printf("Gracias por utilizar el sistema.\n");
                 break;
             default:
@@ -301,5 +346,6 @@ int main(){
         }
         printf("\n");
     }
+
     return 0;
 }

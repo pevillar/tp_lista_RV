@@ -142,7 +142,7 @@ void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
             estudiante = estudiante->siguienteMateria;
         }
         if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El materia: %s, no existe en el sistema.\n", nombre);
+            printf("La materia: %s, no existe en el sistema.\n", nombre);
         } else {
             aEliminar = estudiante->siguienteMateria;
             estudiante->siguienteMateria = estudiante->siguienteMateria->siguienteMateria;
