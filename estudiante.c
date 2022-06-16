@@ -29,6 +29,11 @@ int lenInt(int integer){
     return count;
 }
 
+/**
+ * Verifica que el dni tenga 8 digitos.
+ * @param dni
+ * @return
+ */
 int ComprobarDni(int *dni) {
     //lenInt devuelve 1 si el numero es negativo
     if(lenInt(*dni) == 8){
@@ -39,6 +44,11 @@ int ComprobarDni(int *dni) {
     return 0;
 }
 
+/**
+ * Comprueba si el anio es o no bisiesto.
+ * @param anio
+ * @return
+ */
 int bisiento(int *anio){
     if ( *anio % 4 == 0 && *anio % 100 != 0 || *anio % 400 == 0 )  {
         return 1;
@@ -47,6 +57,13 @@ int bisiento(int *anio){
     }
 }
 
+/**
+ * Verifica el dia sea correcta dependiendo el mes.
+ * @param mes
+ * @param dia
+ * @param anio
+ * @return
+ */
 int comprobarDia(int *mes, int *dia, int *anio) {
     if(*mes == 2 && *dia<=28){
         return 1;
@@ -62,9 +79,17 @@ int comprobarDia(int *mes, int *dia, int *anio) {
     return 0;
 }
 
+/**
+ * Verifica la fecha de nacimiento ingresada.
+ * @param fechaActual
+ * @param anio
+ * @param mes
+ * @param dia
+ * @return
+ */
 int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
     if(*anio<1950 || *anio>fechaActual->tm_year+1900-18){
-        printf("El a%co esta mal escrito\nRecuerde que debe de estar entre 1950 y %i. Ingreselo nuevamente: ", 164 , fechaActual->tm_year+1900-18);
+        printf("El anioo esta mal escrito\nRecuerde que debe de estar entre 1950 y %i. Ingreselo nuevamente: ", 164 , fechaActual->tm_year+1900-18);
         scanf("%i", anio);
         return 0;
     }
@@ -82,8 +107,8 @@ int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
 }
 
 /**
- * Inicializa un Estudiante con su valor pasado como parametro, y 'siguiente'
- * referenciando a 'NULL'.
+ * Inicializa un Estudiante con su valor pasado como parametro con todos sus
+ * datos y las listas de materias en NULL.
  * @param valor
  * @return
  */
@@ -100,7 +125,13 @@ Estudiante *crearEstudiante(char* nombre, char* apellido, int edad, int dni, cha
     return estudiante;
 }
 
-
+/**
+ * Devuelve una cadena de caracteres con la fecha de nacimiento.
+ * @param anio
+ * @param mes
+ * @param dia
+ * @return
+ */
 char* obtenerNacimiento( int *anio, int *mes, int *dia){
     char* nacimiento = (char*)calloc(10,sizeof(char));
     char year[5];
@@ -117,6 +148,14 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
     return nacimiento;
 }
 
+/**
+ * Calcula la edad del estudiante.
+ * @param fechaActual
+ * @param anio
+ * @param mes
+ * @param dia
+ * @return
+ */
 int obtenerEdad(struct tm *fechaActual, int *anio,int *mes, int *dia) {
     int edad = fechaActual->tm_year+1900-*anio;
     if(fechaActual->tm_mon+1-*mes<0){
@@ -129,7 +168,7 @@ int obtenerEdad(struct tm *fechaActual, int *anio,int *mes, int *dia) {
 
 /**
  * Agrega un nuevo elemento de tipo 'Estudiante' a la lista ordenado de forma
- * creciente segun su valor introducido.
+ * creciente segun la edad del mismo.
  * @param lista
  * @param edad
  */
@@ -159,6 +198,10 @@ Estudiante *agregar(Estudiante **lista, char* nombre, char* apellido,  int anio,
     return nuevoEstudiante;
 }
 
+/**
+ * Imprime por pantalla los datos de un estudiante.
+ * @param estudiante
+ */
 void imprimirEstudiante(Estudiante *estudiante){
     printf("\nApellido: %s\n", estudiante->apellido);
     printf("Nombre: %s\n", estudiante->nombre);
@@ -168,6 +211,10 @@ void imprimirEstudiante(Estudiante *estudiante){
     printf("------------------------------------------\n");
 }
 
+/**
+ * Imprime materias en curso del estudiante, es decir, que aun no rindio.
+ * @param estudiante
+ */
 void imprimirMateriasEnCurso(Estudiante *estudiante) {
     if(estudiante->materiasEnCurso != NULL) {
         imprimirMateriasEstudiante(estudiante->materiasEnCurso);
@@ -176,6 +223,10 @@ void imprimirMateriasEnCurso(Estudiante *estudiante) {
     }
 }
 
+/**
+ * Imprime todos los datos de cada uno de los estudiantes en la lista.
+ * @param lista
+ */
 void imprimir(Estudiante *lista) {
     while (lista != NULL) {
         imprimirEstudiante(lista);
@@ -185,55 +236,13 @@ void imprimir(Estudiante *lista) {
 }
 
 /**
- * Se obtiene el elemento en la posicion pasada como parametro.
+ * Se obtiene el estudiante dentro del rango de edad pasado como parametro.
  * @param lista
- * @param posicion: debe estar entre los valores 1 y tamanio de la lista
- * @return: nodo en la posicion (parametro)
+ * @param edadMinima
+ * @param edadMaxima
+ * @return
  */
-Estudiante obtenerEstudiante(Estudiante **lista, int posicion){
-    Estudiante *estudiante = *lista;
-    if(posicion>0 && posicion<=tamanio){
-        for (int i = 0; i < (posicion - 1); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-        return *estudiante;
-    }
-}
-
-/**
- * Se obtiene el estudiante con la edad pasada como parametro.
- * @param lista
- * @param edad: edad del estudiante a buscar.
- * @return: nodo en la posicion (parametro)
- */
-Estudiante *obtenerEstudiantePorEdad(Estudiante **lista, int edad, int dni){
-    Estudiante *estudiante = *lista;
-    while(estudiante->edad != edad){
-        if(estudiante->siguiente == NULL){
-            printf("No se encontro al estudiante\n");
-            estudiante = NULL;
-            break;
-        }
-        estudiante = estudiante->siguiente;
-    }
-    while(estudiante->edad == edad && estudiante->dni != dni){
-        if(estudiante->siguiente == NULL){
-            printf("No se encontro al estudiante\n");
-            estudiante = NULL;
-            break;
-        }
-        estudiante = estudiante->siguiente;
-    }
-    return estudiante;
-}
-
-/**
- * Se obtiene el elemento con el edad pasado como parametro.
- * @param lista
- * @param edad: edad del estudiante a buscar.
- * @return: nodo en la posicion (parametro)
- */
-void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int edadMaxima){
+void obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int edadMaxima){
     Estudiante *estudiante = *lista;
     while(estudiante->edad < edadMinima){
         if(estudiante->siguiente == NULL){
@@ -253,14 +262,30 @@ void *obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int ed
     }
 }
 
+/**
+ * Agrega a la lista de materias aprobadas por el estudiante.
+ * @param materia
+ * @param estudiante
+ */
 void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
     agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
 }
 
+/**
+ * Inscribir un estudiante a una materia.
+ * @param materia
+ * @param estudiante
+ */
 void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
     agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
 }
 
+/**
+ * Se agrega del estudiante en la materia correspondiente.
+ * @param nombreMateria
+ * @param estudiante
+ * @param nota
+ */
 void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
     if(estudiante->materiasEnCurso != NULL){
         MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
@@ -273,52 +298,9 @@ void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
 }
 
 /**
- * Elimina el elemento en la posicion pasada como parametro
- * @param lista
- * @param posicion: entre los valores 1 y 'tamanio' de lista
+ * Elimina el primer estudiante de la lista.
+ * @param listaNombre
  */
-void borrarXEstudiante(Estudiante *lista, int posicion) {
-    Estudiante *estudiante = lista;
-    Estudiante *aEliminar;
-    if(posicion>0 && posicion<=tamanio){
-        for (int i = 0; i < (posicion - 1); ++i) {
-            estudiante = estudiante->siguiente;
-        }
-        aEliminar = estudiante->siguiente;
-        estudiante->siguiente = estudiante->siguiente->siguiente;
-        free(aEliminar);
-    }
-    tamanio--;
-}
-
-/**
- * Elimina el elemento en la posicion pasada como parametro
- * @param lista
- * @param posicion: entre los valores 1 y 'tamanio' de lista
- */
-void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
-    Estudiante *estudiante = lista;
-    Estudiante *aEliminar;
-    while(estudiante->siguiente->edad<edad){
-        if(estudiante->siguiente == NULL){
-            printf("No se encontro al estudiante\n");
-            break;
-        }
-        estudiante = estudiante->siguiente;
-    }
-    while(estudiante->siguiente->edad == edad && estudiante->siguiente->dni != dni){
-        if(estudiante->siguiente == NULL){
-            printf("No se encontro al estudiante\n");
-            break;
-        }
-        estudiante = estudiante->siguiente;
-    }
-    aEliminar = estudiante->siguiente;
-    estudiante->siguiente = estudiante->siguiente->siguiente;
-    free(aEliminar);
-    tamanio--;
-}
-
 void borrarPrimerEstudianteEdad(Estudiante *listaNombre) {
     if (listaNombre->siguiente != NULL) {
         *listaNombre = *listaNombre->siguiente;
@@ -329,6 +311,12 @@ void borrarPrimerEstudianteEdad(Estudiante *listaNombre) {
     }
 }
 
+/**
+ * Compara alfabeticamente los nombres completos de dos estudiantes.
+ * @param estudiante1
+ * @param estudiante2
+ * @return
+ */
 int compararNombres(Estudiante *estudiante1, Estudiante *estudiante2){
     if (strcmp(estudiante1->apellido, estudiante2->apellido) == 0){
         return strcmp(estudiante1->nombre, estudiante2->nombre);
@@ -337,6 +325,12 @@ int compararNombres(Estudiante *estudiante1, Estudiante *estudiante2){
     }
 }
 
+/**
+ * Elimina el estudiante con el nombre correspondiente.
+ * @param listaNombre
+ * @param nombre
+ * @param apellido
+ */
 void borrarEstudiantePorNombreEdad(Estudiante *listaNombre, char *nombre, char *apellido) {
     Estudiante *estudiante = listaNombre;
     Estudiante *estudiante2

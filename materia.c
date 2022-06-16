@@ -15,12 +15,6 @@ typedef struct Materia {
 
 int tamanioMateria = 0;
 
-/**
- * Inicializa un Nodo con su valor pasado como parametro, y 'siguiente'
- * referenciando a 'NULL'.
- * @param valor
- * @return
- */
 Materia *crearMateria(char *nombre, int numero){
     Materia *materia = (Materia*) malloc(sizeof (Materia));
     materia -> notas = 0;
@@ -33,12 +27,6 @@ Materia *crearMateria(char *nombre, int numero){
     return materia;
 }
 
-/**
- *
- * @param materia
- * @param nombre
- * @param numero
- */
 void agregarMateria(Materia **materia, char * nombre, int numero){
     Materia  *nuevoMateria = crearMateria(nombre, numero);
     Materia  *cursor = *materia;
@@ -57,12 +45,6 @@ void agregarMateria(Materia **materia, char * nombre, int numero){
     tamanioMateria++;
 }
 
-/**
- *
- * @param listaMateria
- * @param posicion
- * @return
- */
 Materia obtenerMateria(Materia **listaMateria, int posicion){
     Materia  *materia = *listaMateria;
     if(posicion>0 && posicion<=tamanioMateria){
@@ -73,12 +55,6 @@ Materia obtenerMateria(Materia **listaMateria, int posicion){
     }
 }
 
-/**
- *
- * @param listaMateria
- * @param valor
- * @return
- */
 Materia obtenerElementoPorValor(Materia **listaMateria, int valor){
     Materia *materia = *listaMateria;
     while(materia->numero != valor){
@@ -87,12 +63,6 @@ Materia obtenerElementoPorValor(Materia **listaMateria, int valor){
     return *materia;
 }
 
-/**
- *
- * @param listaMateria
- * @param nombre
- * @return
- */
 Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
     Materia *materia = *listaMateria;
     while((materia->siguienteMateria != NULL)
