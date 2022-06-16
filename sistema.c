@@ -28,6 +28,11 @@ Estudiante *buscarEstudiantePorNombreCompleto(EstudiantePorNombre *listaNombre, 
     }
 }
 
+void eliminarUnEstudiante(Estudiante *listaPorEdad, EstudiantePorNombre *listaPorNombre, char *nombre, char *apellido){
+    borrarEstudiantePorNombreEdad(listaPorEdad, nombre, apellido);
+    borrarEstudiantePorNombre(listaPorNombre, nombre, apellido);
+}
+
 Estudiante *buscarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
     EstudiantePorNombre *estudianteN = obtenerEstudiantePorNombre(&listaNombre, nombre);
     if (estudianteN == NULL) {
@@ -170,7 +175,7 @@ int main(){
     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, "miguel", apellido);
     imprimir(estudiantePrueba);*/
 
-    while(opcion != 13){
+    while(opcion != 14){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
                "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
                "para escribir por ejemplo: 'seniales'.\n");
@@ -186,7 +191,8 @@ int main(){
         printf("10. Ver todos los estudiantes\n");
         printf("11. Ver cantidad de estudiantes\n");
         printf("12. Cargar sistema de prueba\n");
-        printf("13. Salir\n");
+        printf("13. Borrar estudiante\n");
+        printf("14. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
@@ -338,6 +344,15 @@ int main(){
                 }
                 break;
             case 13:
+                printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                getc(stdin);
+                pedirDatoConFgets(nombre);
+                printf("Escribe el apellido del estudiante: ");
+                pedirDatoConFgets(apellido);
+                eliminarUnEstudiante(listaEstudiantes, listaEstudiantesNombre, nombre, apellido);
+                break;
+            case 14:
                 printf("Gracias por utilizar el sistema.\n");
                 break;
             default:

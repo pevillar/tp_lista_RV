@@ -318,3 +318,46 @@ void borrarEstudiantePorEdad(Estudiante *lista, int edad, int dni) {
     free(aEliminar);
     tamanio--;
 }
+
+void borrarPrimerEstudianteEdad(Estudiante *listaNombre) {
+    if (listaNombre->siguiente != NULL) {
+        *listaNombre = *listaNombre->siguiente;
+        tamanio--;
+    } else {
+        listaNombre = NULL;
+        tamanio--;
+    }
+}
+
+int compararNombres(Estudiante *estudiante1, Estudiante *estudiante2){
+    if (strcmp(estudiante1->apellido, estudiante2->apellido) == 0){
+        return strcmp(estudiante1->nombre, estudiante2->nombre);
+    } else {
+        return strcmp(estudiante1->apellido, estudiante2->apellido);
+    }
+}
+
+void borrarEstudiantePorNombreEdad(Estudiante *listaNombre, char *nombre, char *apellido) {
+    Estudiante *estudiante = listaNombre;
+    Estudiante *estudiante2
+            = crearEstudiante(nombre, apellido, 20, 45781369, "2-4-2002");
+    if (compararNombres(estudiante, estudiante2) == 0){
+        borrarPrimerEstudianteEdad(listaNombre);
+    } else {
+        Estudiante *aEliminar;
+        while ((estudiante->siguiente != NULL)
+               && (compararNombres(estudiante->siguiente, estudiante2)) != 0) {
+            estudiante = estudiante->siguiente;
+        }
+        if ((estudiante->siguiente == NULL) ||
+            compararNombres(estudiante->siguiente, estudiante2) != 0) {
+            printf("El estudiante: %s %s, no existe en el sistema.", nombre, apellido);
+        } else {
+            aEliminar = estudiante->siguiente;
+            estudiante->siguiente = estudiante->siguiente->siguiente;
+            free(aEliminar);
+            tamanio--;
+        }
+    }
+    free(estudiante2);
+}

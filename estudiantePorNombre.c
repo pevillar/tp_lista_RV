@@ -180,18 +180,21 @@ void borrarEstudiantePorPosicion(EstudiantePorNombre *listaNombre, int posicion)
     tamanioDeNombres--;
 }
 
-void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
-    if (strcmp(listaNombre->nombre, nombre) == 0){
+void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre, char *apellido) {
+    EstudiantePorNombre *estudiante = listaNombre;
+    EstudiantePorNombre *estudiante2
+            = crearEstudianteNombre(estudiante->estudianteEdad, nombre, apellido);
+    if (compararNombreCompleto(estudiante, estudiante2) == 0){
         borrarPrimerEstudiante(listaNombre);
     } else {
-        EstudiantePorNombre *estudiante = listaNombre;
         EstudiantePorNombre *aEliminar;
         while ((estudiante->siguiente != NULL)
-               && (strcmp(estudiante->siguiente->nombre, nombre) != 0)) {
+               && (compararNombreCompleto(estudiante->siguiente, estudiante2)) != 0) {
             estudiante = estudiante->siguiente;
         }
-        if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("El nombre: %s, no existe en la listaNombre.\n", nombre);
+        if ((estudiante->siguiente == NULL) ||
+        compararNombreCompleto(estudiante->siguiente, estudiante2) != 0) {
+            printf("\n");
         } else {
             aEliminar = estudiante->siguiente;
             estudiante->siguiente = estudiante->siguiente->siguiente;
@@ -199,27 +202,7 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre) {
             tamanioDeNombres--;
         }
     }
-}
-
-void borrarEstudiantePorApellido(EstudiantePorNombre *listaNombre, char *apellido) {
-    if (strcmp(listaNombre->apellido, apellido) == 0) {
-        borrarPrimerEstudiante(listaNombre);
-    } else {
-        EstudiantePorNombre *estudiante = listaNombre;
-        EstudiantePorNombre *aEliminar;
-        while((estudiante->siguiente != NULL)
-              && (strcmp(estudiante->siguiente->apellido, apellido) != 0)){
-            estudiante = estudiante->siguiente;
-        }
-        if (strcmp(estudiante->apellido, apellido) != 0) {
-            printf("El apellido: %s, no existe en la listaNombre.\n", apellido);
-        } else {
-            aEliminar = estudiante->siguiente;
-            estudiante->siguiente = estudiante->siguiente->siguiente;
-            free(aEliminar);
-            tamanioDeNombres--;
-        }
-    }
+    free(estudiante2);
 }
 
 void imprimirListaPorNombre(EstudiantePorNombre *listaNombre) {
