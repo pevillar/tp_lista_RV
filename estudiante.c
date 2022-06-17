@@ -107,7 +107,7 @@ int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
 }
 
 /**
- * Inicializa un Estudiante con su valor pasado como parametro con todos sus
+ * Inicializa un Estudiante con todos sus
  * datos y las listas de materias en NULL.
  * @param valor
  * @return

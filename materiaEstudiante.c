@@ -12,6 +12,13 @@ typedef struct MateriaEstudiante {
     int intentos;
 } MateriaEstudiante;
 
+/**
+ * Se carga la nota de la materia rendida por el estudiante.
+ * Para ello se verifica si el estudiante aun tiene
+ * oportunidades para rendirla.
+ * @param materiaEstudiante
+ * @param nota
+ */
 void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
     if (nota >= 0 && nota <= 10) {
         if(materiaEstudiante->nota == -1 && materiaEstudiante->intentos == 0) {
@@ -35,6 +42,12 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
     }
 }
 
+/**
+ * Se inicializa una materia con los valores por defecto.
+ * Esta estara vinculada con cada estudiante cuante se anote.
+ * @param materia
+ * @return
+ */
 MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     MateriaEstudiante *nuevaMateria = (MateriaEstudiante*) malloc(sizeof (MateriaEstudiante));
     nuevaMateria -> nota = -1.0;
@@ -45,6 +58,11 @@ MateriaEstudiante *crearMateriaEstudiante(Materia *materia){
     return nuevaMateria;
 }
 
+/**
+ * Se crea y agrega la materia a la lista de materias.
+ * @param materiaEstudiante
+ * @param materia
+ */
 void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *materia ){
     MateriaEstudiante  *nuevaMateria = crearMateriaEstudiante(materia);
     nuevaMateria->materia->cantDeEstudiantes++;
@@ -52,6 +70,13 @@ void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *ma
     *materiaEstudiante = nuevaMateria;
 }
 
+/**
+ * Se agrega la materia que ya esta aprovada por el estudiante a la lista.
+ * @param materiaEstudiante
+ * @param materia
+ * @param nota
+ * @param intentos
+ */
 void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Materia *materia, double nota, int intentos){
     MateriaEstudiante  *nuevaMateria = crearMateriaEstudiante(materia);
     nuevaMateria->nota = nota;
@@ -61,6 +86,12 @@ void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Mat
     *materiaEstudiante = nuevaMateria;
 }
 
+/**
+ * Devuelve la materia especificada como parametro.
+ * @param listaMateria
+ * @param nombre
+ * @return
+ */
 MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMateria, char *nombre){
     MateriaEstudiante *materia = *listaMateria;
     while((materia->siguienteMateriaEstudiante != NULL)
@@ -74,6 +105,10 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
     }
 }
 
+/**
+ * Elimina la primera materia en la listaNombre.
+ * @param listaNombre
+ */
 void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
     if (listaNombre->siguienteMateriaEstudiante != NULL) {
         *listaNombre = *listaNombre->siguienteMateriaEstudiante;
@@ -81,8 +116,11 @@ void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
         listaNombre = NULL;
     }
 }
-
-
+/**
+ * Elimina la materia especificada por 'nombre' de la listaNombre.
+ * @param listaNombre
+ * @param nombre
+ */
 void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nombre) {
     MateriaEstudiante *materiaEstudiante = listaNombre;
     if (strcmp(materiaEstudiante->materia->nombre, nombre) == 0){
@@ -104,6 +142,11 @@ void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nomb
     }
 }
 
+/**
+ * Imprime por pantalla todas la materias en curso de un estudiante
+ * y las desaprovadas que aun puede rendir.
+ * @param listaMateria
+ */
 void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
         printf("%s\n", listaMateria->materia->nombre);
@@ -126,6 +169,10 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     printf("\n");
 }
 
+/**
+ * Imprime por pantalla las materias aprobadas por el estudiante.
+ * @param listaMateria
+ */
 void imprimirMateriasAprobadasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
         printf("%s\n", listaMateria->materia->nombre);

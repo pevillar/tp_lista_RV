@@ -15,6 +15,12 @@ typedef struct Materia {
 
 int tamanioMateria = 0;
 
+/**
+ * Devuelve la materia correspondiente al 'id' de la materia.
+ * @param listaMateria
+ * @param valor
+ * @return
+ */
 Materia *obtenerElementoPorValor(Materia **listaMateria, int valor){
     Materia *materia = *listaMateria;
     while(materia->numero < valor && materia->siguienteMateria != NULL){
@@ -26,6 +32,12 @@ Materia *obtenerElementoPorValor(Materia **listaMateria, int valor){
     return NULL;
 }
 
+/**
+ * Devuelve la materia con el nombre pasado como parametro.
+ * @param listaMateria
+ * @param nombre
+ * @return
+ */
 Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
     Materia *materia = *listaMateria;
     while((materia->siguienteMateria != NULL)
@@ -39,6 +51,12 @@ Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
     }
 }
 
+/**
+ * Inicializa una materia con los valores por defecto.
+ * @param nombre
+ * @param numero
+ * @return
+ */
 Materia *crearMateria(char *nombre, int numero){
     Materia *materia = (Materia*) malloc(sizeof (Materia));
     materia -> notas = 0;
@@ -51,6 +69,12 @@ Materia *crearMateria(char *nombre, int numero){
     return materia;
 }
 
+/**
+ * Se agregan los datos a la materia correspondiente.
+ * @param materia
+ * @param nombre
+ * @param numero
+ */
 void cargarDatosMateria(Materia **materia, char * nombre, int numero){
     Materia  *nuevoMateria = crearMateria(nombre, numero);
     Materia  *cursor = *materia;
@@ -69,6 +93,13 @@ void cargarDatosMateria(Materia **materia, char * nombre, int numero){
     tamanioMateria++;
 }
 
+/**
+ * Se agrega la materia a la lista de materias haciendo las
+ * comprobaciones necesarias.
+ * @param materia
+ * @param nombre
+ * @param numero
+ */
 void agregarMateria(Materia **materia, char * nombre, int numero){
     if(*materia != NULL){
         Materia *pruebaNombre = obtenerMateriaPorNombre(materia, nombre);
@@ -84,71 +115,28 @@ void agregarMateria(Materia **materia, char * nombre, int numero){
     }
 }
 
-Materia obtenerMateria(Materia **listaMateria, int posicion){
-    Materia  *materia = *listaMateria;
-    if(posicion>0 && posicion<=tamanioMateria){
-        for (int i = 0; i < (posicion - 1); ++i) {
-            materia = materia->siguienteMateria;
-        }
-        return *materia;
-    }
-}
-
-void borrarPrimeraMateria(Materia *listaNombre) {
-    if (listaNombre->siguienteMateria != NULL) {
-        *listaNombre = *listaNombre->siguienteMateria;
-        tamanioMateria--;
-    } else {
-        listaNombre = NULL;
-        tamanioMateria--;
-    }
-}
-
-void borrarXMateria(Materia *listaMateria, int posicion) {
-    Materia *materia = listaMateria;
-    Materia *aEliminar;
-    if(posicion>0 && posicion<=tamanioMateria){
-        for (int i = 0; i < (posicion - 1); ++i) {
-            materia = materia->siguienteMateria;
-        }
-        aEliminar = materia->siguienteMateria;
-        materia->siguienteMateria = materia->siguienteMateria->siguienteMateria;
-        free(aEliminar);
-    }
-    tamanioMateria--;
-}
-
-void borrarMateriaPorNombre(Materia *listaNombre, char *nombre) {
-    if (strcmp(listaNombre->nombre, nombre) == 0){
-        borrarPrimeraMateria(listaNombre);
-    } else {
-        Materia *estudiante = listaNombre;
-        Materia *aEliminar;
-        while ((estudiante->siguienteMateria != NULL)
-               && (strcmp(estudiante->siguienteMateria->nombre, nombre) != 0)) {
-            estudiante = estudiante->siguienteMateria;
-        }
-        if (strcmp(estudiante->nombre, nombre) != 0) {
-            printf("La materia: %s, no existe en el sistema.\n", nombre);
-        } else {
-            aEliminar = estudiante->siguienteMateria;
-            estudiante->siguienteMateria = estudiante->siguienteMateria->siguienteMateria;
-            free(aEliminar);
-            tamanioMateria--;
-        }
-    }
-}
-
+/**
+ * Imprime por pantalla el promedio de estudiantes que aprobaron la materia.
+ * @param materia
+ */
 void obtenerPromedioDeAprobados(Materia *materia){
     double promedioDeAprobados = (materia->cantDeAprobados*100.0)/materia->cantDeEstudiantesRendieron;
     printf("El promedio de aprobacion es del %.2f%\n", promedioDeAprobados);
 }
 
+/**
+ * Imprime por pantalla la nota promedio de la materia
+ * @param materia
+ */
 void obtenerNotaPromedio(Materia *materia){
     double notaPromedio = (materia->notas*10.0)/(materia->cantDeEstudiantesRendieron*10.0);
     printf("La nota promedio en es %.2f\n", notaPromedio);
 }
 
+/**
+ * Imprime por pantalla todas la mataerias cargadas al sistema.
+ * @param listaMateria
+ */
 void imprimirMaterias(Materia *listaMateria) {
     while (listaMateria != NULL) {
         printf("%d - %s\n", listaMateria->numero, listaMateria->nombre);

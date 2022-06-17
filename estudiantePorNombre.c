@@ -15,9 +15,11 @@ typedef struct EstudiantePorNombre {
 int tamanioDeNombres = 0;
 
 /**
- * Inicializa un materia de estudiante con sus datos pasados como parametro,
+ * Inicializa un nodo de estudiante con sus datos pasados como parametro,
  * y 'siguiente' referenciando a 'NULL'.
- * @param
+ * @param estudianteEdad
+ * @param nombre
+ * @param apellido
  * @return
  */
 EstudiantePorNombre *crearEstudianteNombre(Estudiante *estudianteEdad, char *nombre, char *apellido){
