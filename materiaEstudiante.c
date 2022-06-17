@@ -12,8 +12,6 @@ typedef struct MateriaEstudiante {
     int intentos;
 } MateriaEstudiante;
 
-int tamanioMateriaEstudiante = 0;
-
 void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
     if (nota >= 0 && nota <= 10) {
         if(materiaEstudiante->nota == -1 && materiaEstudiante->intentos == 0) {
@@ -52,7 +50,6 @@ void agregarMateriaEstudiante(MateriaEstudiante **materiaEstudiante, Materia *ma
     nuevaMateria->materia->cantDeEstudiantes++;
     nuevaMateria->siguienteMateriaEstudiante = *materiaEstudiante;
     *materiaEstudiante = nuevaMateria;
-    tamanioMateriaEstudiante++;
 }
 
 void agregarMateriaEstudianteAprobada(MateriaEstudiante **materiaEstudiante, Materia *materia, double nota, int intentos){
@@ -78,13 +75,11 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
 }
 
 void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
-    MateriaEstudiante *aEliminar;
     if (listaNombre->siguienteMateriaEstudiante != NULL) {
         *listaNombre = *listaNombre->siguienteMateriaEstudiante;
     } else {
         listaNombre = NULL;
     }
-    tamanioMateriaEstudiante--;
 }
 
 
@@ -105,7 +100,6 @@ void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nomb
             aEliminar = materiaEstudiante->siguienteMateriaEstudiante;
             materiaEstudiante->siguienteMateriaEstudiante = materiaEstudiante->siguienteMateriaEstudiante->siguienteMateriaEstudiante;
             free(aEliminar);
-            tamanioMateriaEstudiante--;
         }
     }
 }
