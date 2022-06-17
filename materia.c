@@ -15,6 +15,30 @@ typedef struct Materia {
 
 int tamanioMateria = 0;
 
+Materia *obtenerElementoPorValor(Materia **listaMateria, int valor){
+    Materia *materia = *listaMateria;
+    while(materia->numero < valor && materia->siguienteMateria != NULL){
+        materia = materia->siguienteMateria;
+    }
+    if(materia->numero == valor){
+        return materia;
+    }
+    return NULL;
+}
+
+Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
+    Materia *materia = *listaMateria;
+    while((materia->siguienteMateria != NULL)
+          && strcmp(materia->nombre, nombre) != 0){
+        materia = materia->siguienteMateria;
+    }
+    if (strcmp(materia->nombre, nombre) != 0) {
+        return NULL;
+    } else {
+        return materia;
+    }
+}
+
 Materia *crearMateria(char *nombre, int numero){
     Materia *materia = (Materia*) malloc(sizeof (Materia));
     materia -> notas = 0;
@@ -27,7 +51,7 @@ Materia *crearMateria(char *nombre, int numero){
     return materia;
 }
 
-void agregarMateria(Materia **materia, char * nombre, int numero){
+void cargarDatosMateria(Materia **materia, char * nombre, int numero){
     Materia  *nuevoMateria = crearMateria(nombre, numero);
     Materia  *cursor = *materia;
     if ((cursor == NULL) || (numero < cursor->numero)){
@@ -45,6 +69,21 @@ void agregarMateria(Materia **materia, char * nombre, int numero){
     tamanioMateria++;
 }
 
+void agregarMateria(Materia **materia, char * nombre, int numero){
+    if(*materia != NULL){
+        Materia *pruebaNombre = obtenerMateriaPorNombre(materia, nombre);
+        Materia *pruebaNumero = obtenerElementoPorValor(materia,numero);
+        if(pruebaNombre == NULL && pruebaNumero == NULL){
+            cargarDatosMateria(materia, nombre, numero);
+        }else{
+            printf("Error al cargar los datos de la materia.\n"
+                   "Revisar sino exite una materia con este mismo nombre o con este ID.\n");
+        }
+    }else{
+        cargarDatosMateria(materia, nombre, numero);
+    }
+}
+
 Materia obtenerMateria(Materia **listaMateria, int posicion){
     Materia  *materia = *listaMateria;
     if(posicion>0 && posicion<=tamanioMateria){
@@ -52,28 +91,6 @@ Materia obtenerMateria(Materia **listaMateria, int posicion){
             materia = materia->siguienteMateria;
         }
         return *materia;
-    }
-}
-
-Materia obtenerElementoPorValor(Materia **listaMateria, int valor){
-    Materia *materia = *listaMateria;
-    while(materia->numero != valor){
-        materia = materia->siguienteMateria;
-    }
-    return *materia;
-}
-
-Materia *obtenerMateriaPorNombre(Materia **listaMateria, char *nombre){
-    Materia *materia = *listaMateria;
-    while((materia->siguienteMateria != NULL)
-          && strcmp(materia->nombre, nombre) != 0){
-        materia = materia->siguienteMateria;
-    }
-    if (strcmp(materia->nombre, nombre) != 0) {
-        printf("La materia: %s, no existe en el sistema.\n", nombre);
-        return NULL;
-    } else {
-        return materia;
     }
 }
 

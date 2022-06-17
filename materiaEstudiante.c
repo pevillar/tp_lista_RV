@@ -19,7 +19,7 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
         if(materiaEstudiante->nota == -1 && materiaEstudiante->intentos == 0) {
             materiaEstudiante->nota = nota;
             materiaEstudiante->intentos++;
-            materiaEstudiante->aprobado = (nota >= 4) ? 1.0 : 0;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
             materiaEstudiante->materia->notas += nota;
             materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
             materiaEstudiante->materia->cantDeEstudiantesRendieron++;
@@ -27,9 +27,9 @@ void cargarNota(MateriaEstudiante *materiaEstudiante, double nota){
             materiaEstudiante->intentos++;
         }else if(materiaEstudiante->nota < nota && materiaEstudiante->intentos < 3){
             materiaEstudiante->intentos++;
-            materiaEstudiante->aprobado = (nota >= 4) ? 1.0 : 0;
+            materiaEstudiante->aprobado = (nota >= 4) ? 1 : 0;
             materiaEstudiante->materia->notas += nota - materiaEstudiante->nota;
-            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1.0 : 0;
+            materiaEstudiante->materia->cantDeAprobados += (nota >= 4) ? 1 : 0;
             materiaEstudiante->nota = nota;
         }
     }else {
@@ -71,7 +71,6 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
         materia = materia->siguienteMateriaEstudiante;
     }
     if (strcmp(materia->materia->nombre, nombre) != 0) {
-        printf("La materia: %s, no existe en el sistema.\n", nombre);
         return NULL;
     } else {
         return materia;
@@ -79,13 +78,12 @@ MateriaEstudiante *obtenerMateriaEstudiantePorNombre(MateriaEstudiante **listaMa
 }
 
 void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
-    MateriaEstudiante *aEliminar = listaNombre->siguienteMateriaEstudiante;
+    MateriaEstudiante *aEliminar;
     if (listaNombre->siguienteMateriaEstudiante != NULL) {
         *listaNombre = *listaNombre->siguienteMateriaEstudiante;
     } else {
         listaNombre = NULL;
     }
-    free(aEliminar);
     tamanioMateriaEstudiante--;
 }
 

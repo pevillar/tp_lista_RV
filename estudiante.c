@@ -220,7 +220,7 @@ void imprimirMateriasEnCurso(Estudiante *estudiante) {
         printf("\nMaterias Cursando: \n");
         imprimirMateriasEstudiante(estudiante->materiasEnCurso);
     }else{
-        printf("el estudiante %S %S no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
+        printf("el estudiante %s %s no esta cursando ninguna materia.\n", estudiante->nombre, estudiante->apellido);
     }
 }
 
@@ -293,7 +293,34 @@ void agregarMateriaAprobada(MateriaEstudiante *materiaAprobada, Estudiante *estu
  * @param estudiante
  */
 void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
-    agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+    if(estudiante->materiasEnCurso != NULL){
+        MateriaEstudiante *materiaPruebaCurso =  obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, materia->nombre);
+        if(estudiante->materiasAprobadas != NULL){
+            MateriaEstudiante *materiaPruebaAprobada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasAprobadas, materia->nombre);
+            if(materiaPruebaAprobada == NULL && materiaPruebaCurso == NULL){
+                agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+            }else{
+                if(materiaPruebaAprobada != NULL && materiaPruebaCurso != NULL){
+                    printf("Error");
+                }else if(materiaPruebaCurso == NULL){
+                    printf("No podes anotarte a %s, porque ya la aprobaste.\n", materia->nombre);
+                }else{
+                    printf("No podes anotarte a %s, porque ya la estas cursando.\n", materia->nombre);
+                }
+            }
+        }else{
+            if(materiaPruebaCurso == NULL){
+                agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+            } else{
+                printf("No podes anotarte a %s, porque ya la estas cursando.\n", materia->nombre);
+            }
+        }
+    } else{
+        agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+        printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+    }
 }
 
 /**
@@ -309,10 +336,21 @@ void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, double nota
             cargarNota(materiaBuscada, nota);
             if(materiaBuscada->intentos <= 3 && materiaBuscada->aprobado == 1){
                 agregarMateriaAprobada(materiaBuscada, estudiante);
-                borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                if (estudiante->materiasEnCurso->siguienteMateriaEstudiante == NULL) {
+                    estudiante->materiasEnCurso = NULL;
+                }else{
+                    borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                }
             }else if(materiaBuscada->intentos == 3){
-                borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                printf("Ya no te quedan intentos para cursar %s. Vuelve a intentarlo de nuevo.\n", nombreMateria);
+                if (estudiante->materiasEnCurso->siguienteMateriaEstudiante == NULL) {
+                    estudiante->materiasEnCurso = NULL;
+                }else{
+                    borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                }
             }
+        }else{
+            printf("La materia: %s, no la esta cursando el estudiante.\n", nombreMateria);
         }
     }else{
         printf("El estudiante %s %s no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);

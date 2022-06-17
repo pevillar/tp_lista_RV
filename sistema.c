@@ -249,9 +249,11 @@ int main(){
                 if(listaEstudiantesNombre != NULL && listaDeMaterias != NULL) {
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
+                    if(materiaPrueba == NULL){
+                        printf("La materia: %s, no existe en el sistema.\n", nombre);
+                    }
                     if (estudiantePrueba != NULL && materiaPrueba != NULL) {
                         anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
-                        printf("El estudiante %s %s se anoto a %s.", nombre, apellido, materiaNombre);
                     }
                 } else if(listaEstudiantesNombre == NULL){
                     printf("Todavia no hay ningun estudiante cargado en el sistema.\n");
@@ -321,6 +323,8 @@ int main(){
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
                     if (materiaPrueba != NULL) {
                         obtenerEstadisticas(materiaPrueba);
+                    } else{
+                        printf("La materia: %s, no existe en el sistema.\n", nombre);
                     }
                 }else{
                     printf("Todavia no hay ninguna materia cargada en el sistema.\n");
