@@ -253,7 +253,11 @@ int main(){
                         printf("La materia: %s, no existe en el sistema.\n", nombre);
                     }
                     if (estudiantePrueba != NULL && materiaPrueba != NULL) {
+                        int cantEstudiantes = materiaPrueba->cantDeEstudiantes;
                         anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if(cantEstudiantes != materiaPrueba->cantDeEstudiantes){
+                            printf("El estudiante %s %s se anoto a %s.\n", estudiantePrueba->nombre, estudiantePrueba->apellido, materiaPrueba->nombre);
+                        }
                     }
                 } else if(listaEstudiantesNombre == NULL){
                     printf("Todavia no hay ningun estudiante cargado en el sistema.\n");

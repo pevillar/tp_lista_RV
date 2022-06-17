@@ -116,6 +116,7 @@ void borrarPrimeraMateriaEstudiante(MateriaEstudiante *listaNombre) {
         listaNombre = NULL;
     }
 }
+
 /**
  * Elimina la materia especificada por 'nombre' de la listaNombre.
  * @param listaNombre

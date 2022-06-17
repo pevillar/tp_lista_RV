@@ -299,7 +299,6 @@ void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
             MateriaEstudiante *materiaPruebaAprobada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasAprobadas, materia->nombre);
             if(materiaPruebaAprobada == NULL && materiaPruebaCurso == NULL){
                 agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
-                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
             }else{
                 if(materiaPruebaAprobada != NULL && materiaPruebaCurso != NULL){
                     printf("Error");
@@ -312,14 +311,12 @@ void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
         }else{
             if(materiaPruebaCurso == NULL){
                 agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
-                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
             } else{
                 printf("No podes anotarte a %s, porque ya la estas cursando.\n", materia->nombre);
             }
         }
     } else{
         agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
-        printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
     }
 }
 
