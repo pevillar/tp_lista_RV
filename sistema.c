@@ -141,7 +141,7 @@ void convertirAMinuscula(char *cadena) {
     }
 }
 
-int main() {
+int main(){
 
     Materia *listaDeMaterias = NULL;
     Estudiante *listaEstudiantes = NULL;
@@ -158,8 +158,9 @@ int main() {
     int mes;
     int dia;
     int dni;
+    double nota;
 
-    while(opcion != 14){
+    while(opcion != 15){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
                "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
                "para escribir por ejemplo: 'seniales'.\n");
@@ -171,12 +172,13 @@ int main() {
         printf("6. Anotar un estudiante a una materia\n");
         printf("7. Cargar la nota de un estudiante\n");
         printf("8. Imprimir las materias en curso de un estudiante\n");
-        printf("9. Ver las estadisticas de una materia\n");
-        printf("10. Ver todos los estudiantes\n");
-        printf("11. Ver cantidad de estudiantes\n");
-        printf("12. Cargar sistema de prueba\n");
-        printf("13. Borrar estudiante\n");
-        printf("14. Salir\n");
+        printf("9. Imprimir todas las materias cursadas y en curso de un estudiante\n");
+        printf("10. Ver las estadisticas de una materia\n");
+        printf("11. Ver todos los estudiantes\n");
+        printf("12. Ver cantidad de estudiantes\n");
+        printf("13. Cargar sistema de prueba\n");
+        printf("14. Borrar estudiante\n");
+        printf("15. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
@@ -247,6 +249,9 @@ int main() {
                 if(listaEstudiantesNombre != NULL && listaDeMaterias != NULL) {
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
+                    if(materiaPrueba == NULL){
+                        printf("La materia: %s, no existe en el sistema.\n", nombre);
+                    }
                     if (estudiantePrueba != NULL && materiaPrueba != NULL) {
                         anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
                     }
@@ -263,15 +268,15 @@ int main() {
                 pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
                 pedirDatoConFgets(apellido);
-                printf("Nombre de la materia a anotarse: ");
+                printf("Nombre de la materia a rendir: ");
                 pedirDatoConFgets(materiaNombre);
                 convertirAMinuscula(materiaNombre);
                 printf("Escribe la nota: ");
-                scanf("%i", &dni);
+                scanf("%i", &nota);
                 if(listaEstudiantesNombre != NULL){
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
                     if(estudiantePrueba != NULL){
-                        cargarNotaAMateria(materiaNombre, estudiantePrueba, dni);
+                        cargarNotaAMateria(materiaNombre, estudiantePrueba, nota);
                     }
                 }else{
                     printf("Todavia no hay ningun estudiante cargado en el sistema.\n");
@@ -294,6 +299,22 @@ int main() {
                 }
                 break;
             case 9:
+                printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
+                printf("Escribe el nombre del estudiante: ");
+                getc(stdin);
+                pedirDatoConFgets(nombre);
+                printf("Escribe el apellido del estudiante: ");
+                pedirDatoConFgets(apellido);
+                if(listaEstudiantesNombre != NULL){
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
+                    if(estudiantePrueba != NULL){
+                        imprimirTodasLasMaterias(estudiantePrueba);
+                    }
+                }else{
+                    printf("Todavia no hay ningun estudiante cargado en el sistema");
+                }
+                break;
+            case 10:
                 printf("Escribe el nombre de la materia que deseas obtener (ej: Algebra I): ");
                 fgetc(stdin);
                 pedirDatoConFgets(materiaNombre);
@@ -302,22 +323,24 @@ int main() {
                     materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
                     if (materiaPrueba != NULL) {
                         obtenerEstadisticas(materiaPrueba);
+                    } else{
+                        printf("La materia: %s, no existe en el sistema.\n", nombre);
                     }
                 }else{
                     printf("Todavia no hay ninguna materia cargada en el sistema.\n");
                 }
                 break;
-            case 10:
+            case 11:
                 if(listaEstudiantesNombre != NULL){
                     imprimirEstudiantes(listaEstudiantesNombre);
                 } else{
                     printf("Todavia no hay ningun estudiante cargado en el sistema.\n");
                 }
                 break;
-            case 11:
+            case 12:
                 obtenerCantidadDeEstudiantes();
                 break;
-            case 12:
+            case 13:
                 for (int i = 0; i < 164; ++i) {
                     darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre,
                                         nombres[i], apellidos[i], anios[i], meses[i],
@@ -327,16 +350,23 @@ int main() {
                     cargarMateria(&listaDeMaterias, arregloMaterias[i], i + 1);
                 }
                 break;
-            case 13:
+            case 14:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
                 printf("Escribe el nombre del estudiante: ");
                 getc(stdin);
                 pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
                 pedirDatoConFgets(apellido);
-                eliminarUnEstudiante(listaEstudiantes, listaEstudiantesNombre, nombre, apellido);
+                if(listaEstudiantesNombre != NULL){
+                    if (listaEstudiantesNombre->siguiente == NULL) {
+                        listaEstudiantesNombre = NULL;
+                        listaEstudiantes = NULL;
+                    }else{
+                        eliminarUnEstudiante(listaEstudiantes, listaEstudiantesNombre, nombre, apellido);
+                    }
+                }
                 break;
-            case 14:
+            case 15:
                 printf("Gracias por utilizar el sistema.\n");
                 break;
             default:

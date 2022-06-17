@@ -89,7 +89,7 @@ int comprobarDia(int *mes, int *dia, int *anio) {
  */
 int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
     if(*anio<1950 || *anio>fechaActual->tm_year+1900-18){
-        printf("El anioo esta mal escrito\nRecuerde que debe de estar entre 1950 y %i. Ingreselo nuevamente: ", 164 , fechaActual->tm_year+1900-18);
+        printf("El a%co esta mal escrito\nRecuerde que debe de estar entre 1950 y %i. Ingreselo nuevamente: ", 164 , fechaActual->tm_year+1900-18);
         scanf("%i", anio);
         return 0;
     }
@@ -107,7 +107,7 @@ int comprobarNacimiento(struct tm *fechaActual, int *anio, int *mes, int *dia) {
 }
 
 /**
- * Inicializa un Estudiante con su valor pasado como parametro con todos sus
+ * Inicializa un Estudiante con todos sus
  * datos y las listas de materias en NULL.
  * @param valor
  * @return
@@ -217,11 +217,27 @@ void imprimirEstudiante(Estudiante *estudiante){
  */
 void imprimirMateriasEnCurso(Estudiante *estudiante) {
     if(estudiante->materiasEnCurso != NULL) {
+        printf("\nMaterias Cursando: \n");
         imprimirMateriasEstudiante(estudiante->materiasEnCurso);
     }else{
-        printf("el estudiante %S %S no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);
+        printf("el estudiante %s %s no esta cursando ninguna materia.\n", estudiante->nombre, estudiante->apellido);
     }
 }
+
+void imprimirMateriasAprobadas(Estudiante *estudiante){
+    if(estudiante->materiasAprobadas != NULL) {
+        printf("Materias Aprobadas: \n");
+        imprimirMateriasAprobadasEstudiante(estudiante->materiasAprobadas);
+    }else{
+        printf("el estudiante %S %S no ha aprobado ninguna materia.", estudiante->nombre, estudiante->apellido);
+    }
+}
+
+void imprimirTodasLasMaterias(Estudiante *estudiante){
+    imprimirMateriasEnCurso(estudiante);
+    imprimirMateriasAprobadas(estudiante);
+}
+
 
 /**
  * Imprime todos los datos de cada uno de los estudiantes en la lista.
@@ -267,8 +283,8 @@ void obtenerEstudiantePorRangoDeEdad(Estudiante **lista, int edadMinima, int eda
  * @param materia
  * @param estudiante
  */
-void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
-    agregarMateriaEstudiante(&estudiante->materiasAprobadas, materia);
+void agregarMateriaAprobada(MateriaEstudiante *materiaAprobada, Estudiante *estudiante) {
+    agregarMateriaEstudianteAprobada(&estudiante->materiasAprobadas, materiaAprobada->materia, materiaAprobada->nota, materiaAprobada->intentos);
 }
 
 /**
@@ -277,7 +293,34 @@ void agregarMateriaAprobada(Materia *materia, Estudiante *estudiante) {
  * @param estudiante
  */
 void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
-    agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+    if(estudiante->materiasEnCurso != NULL){
+        MateriaEstudiante *materiaPruebaCurso =  obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, materia->nombre);
+        if(estudiante->materiasAprobadas != NULL){
+            MateriaEstudiante *materiaPruebaAprobada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasAprobadas, materia->nombre);
+            if(materiaPruebaAprobada == NULL && materiaPruebaCurso == NULL){
+                agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+            }else{
+                if(materiaPruebaAprobada != NULL && materiaPruebaCurso != NULL){
+                    printf("Error");
+                }else if(materiaPruebaCurso == NULL){
+                    printf("No podes anotarte a %s, porque ya la aprobaste.\n", materia->nombre);
+                }else{
+                    printf("No podes anotarte a %s, porque ya la estas cursando.\n", materia->nombre);
+                }
+            }
+        }else{
+            if(materiaPruebaCurso == NULL){
+                agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+                printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+            } else{
+                printf("No podes anotarte a %s, porque ya la estas cursando.\n", materia->nombre);
+            }
+        }
+    } else{
+        agregarMateriaEstudiante(&estudiante->materiasEnCurso, materia);
+        printf("El estudiante %s %s se anoto a %s.\n", estudiante->nombre, estudiante->apellido, materia->nombre);
+    }
 }
 
 /**
@@ -286,11 +329,28 @@ void anotarEstudianteAMateria(Materia *materia, Estudiante *estudiante) {
  * @param estudiante
  * @param nota
  */
-void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, int nota) {
+void cargarNotaAMateria(char *nombreMateria, Estudiante *estudiante, double nota) {
     if(estudiante->materiasEnCurso != NULL){
         MateriaEstudiante *materiaBuscada = obtenerMateriaEstudiantePorNombre(&estudiante->materiasEnCurso, nombreMateria);
         if(materiaBuscada != NULL){
             cargarNota(materiaBuscada, nota);
+            if(materiaBuscada->intentos <= 3 && materiaBuscada->aprobado == 1){
+                agregarMateriaAprobada(materiaBuscada, estudiante);
+                if (estudiante->materiasEnCurso->siguienteMateriaEstudiante == NULL) {
+                    estudiante->materiasEnCurso = NULL;
+                }else{
+                    borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                }
+            }else if(materiaBuscada->intentos == 3){
+                printf("Ya no te quedan intentos para cursar %s. Vuelve a intentarlo de nuevo.\n", nombreMateria);
+                if (estudiante->materiasEnCurso->siguienteMateriaEstudiante == NULL) {
+                    estudiante->materiasEnCurso = NULL;
+                }else{
+                    borrarMateriaEstudiantePorNombre(estudiante->materiasEnCurso, materiaBuscada->materia->nombre);
+                }
+            }
+        }else{
+            printf("La materia: %s, no la esta cursando el estudiante.\n", nombreMateria);
         }
     }else{
         printf("El estudiante %s %s no esta cursando ninguna materia.", estudiante->nombre, estudiante->apellido);

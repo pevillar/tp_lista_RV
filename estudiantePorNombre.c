@@ -15,9 +15,11 @@ typedef struct EstudiantePorNombre {
 int tamanioDeNombres = 0;
 
 /**
- * Inicializa un materia de estudiante con sus datos pasados como parametro,
+ * Inicializa un nodo de estudiante con sus datos pasados como parametro,
  * y 'siguiente' referenciando a 'NULL'.
- * @param
+ * @param estudianteEdad
+ * @param nombre
+ * @param apellido
  * @return
  */
 EstudiantePorNombre *crearEstudianteNombre(Estudiante *estudianteEdad, char *nombre, char *apellido){
@@ -131,7 +133,7 @@ void borrarEstudiantePorNombre(EstudiantePorNombre *listaNombre, char *nombre, c
             estudiante = estudiante->siguiente;
         }
         if ((estudiante->siguiente == NULL) ||
-        compararNombreCompleto(estudiante->siguiente, estudiante2) != 0) {
+            compararNombreCompleto(estudiante->siguiente, estudiante2) != 0) {
             printf("\n");
         } else {
             aEliminar = estudiante->siguiente;
