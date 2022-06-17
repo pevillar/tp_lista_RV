@@ -357,7 +357,14 @@ int main(){
                 pedirDatoConFgets(nombre);
                 printf("Escribe el apellido del estudiante: ");
                 pedirDatoConFgets(apellido);
-                eliminarUnEstudiante(listaEstudiantes, listaEstudiantesNombre, nombre, apellido);
+                if(listaEstudiantesNombre != NULL){
+                    if (listaEstudiantesNombre->siguiente == NULL) {
+                        listaEstudiantesNombre = NULL;
+                        listaEstudiantes = NULL;
+                    }else{
+                        eliminarUnEstudiante(listaEstudiantes, listaEstudiantesNombre, nombre, apellido);
+                    }
+                }
                 break;
             case 15:
                 printf("Gracias por utilizar el sistema.\n");
