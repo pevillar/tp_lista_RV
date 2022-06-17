@@ -141,6 +141,163 @@ void convertirAMinuscula(char *cadena) {
     }
 }
 
+void ponerEspacios(char *nombreSinEspacios){
+    int tamanio = strlen(nombreSinEspacios);
+    for(int i = 0; i<tamanio; i++){
+        if(nombreSinEspacios[i] == '-'){
+            nombreSinEspacios[i] = ' ';
+        }
+    }
+}
+void sacarEspacios(char *nombreSinEspacios){
+    int tamanio = strlen(nombreSinEspacios);
+    for(int i = 0; i<tamanio; i++){
+        if(nombreSinEspacios[i] == ' '){
+            nombreSinEspacios[i] = '-';
+        }
+    }
+}
+
+void cargarArchivo(Estudiante *listaEstudiantes, EstudiantePorNombre *listaEstudiantesNombre,Materia *listaDeMaterias,
+                   char *estudiantesUbi, char *materiasUbi, char *materiasEstudiantesUbi, int materiaCargada){
+
+    char *nombre = (char*) malloc(50*sizeof(char));
+    char *apellido = (char*) malloc(50*sizeof(char));
+    char *materiaNombre = (char*) malloc(60*sizeof(char));
+
+    EstudiantePorNombre *cursor = listaEstudiantesNombre;
+
+    if(listaEstudiantes != NULL){
+        FILE *flujoEstudiante= fopen(estudiantesUbi,"w");
+
+        if(flujoEstudiante == NULL){
+            perror("Error en la apertura del archivo");
+        }else{
+            if(cursor != NULL){
+                while(cursor->siguiente != NULL){
+                    nombre = cursor->nombre;
+                    sacarEspacios(nombre);
+                    apellido = cursor->apellido;
+                    sacarEspacios(apellido);
+                    materiaNombre = cursor->estudianteEdad->fechaDeNacimiento;
+                    ponerEspacios(materiaNombre);
+                    fprintf(flujoEstudiante, "%s %s %s %i\n", nombre, apellido,materiaNombre, cursor->estudianteEdad->dni);
+                    cursor = cursor->siguiente;
+                }
+                nombre = cursor->nombre;
+                sacarEspacios(nombre);
+                apellido = cursor->apellido;
+                sacarEspacios(apellido);
+                materiaNombre = cursor->estudianteEdad->fechaDeNacimiento;
+                ponerEspacios(materiaNombre);
+                fprintf(flujoEstudiante, "%s %s %s %i", nombre, apellido,materiaNombre, cursor->estudianteEdad->dni);
+            }
+        }
+
+        fflush(flujoEstudiante);
+        fclose(flujoEstudiante);
+    }
+
+    if(listaDeMaterias != NULL){
+        FILE *flujoMateriaEsc= fopen(materiasUbi,"w");
+
+        if(flujoMateriaEsc == NULL){
+            perror("Error en la apertura del archivo");
+        }else{
+            Materia *cursorMateria = listaDeMaterias;
+            if(cursorMateria != NULL){
+                while(cursorMateria->siguienteMateria != NULL){
+                    materiaNombre = cursorMateria->nombre;
+                    sacarEspacios(materiaNombre);
+                    fprintf(flujoMateriaEsc, "%s %i\n", materiaNombre, cursorMateria->numero);
+                    cursorMateria = cursorMateria->siguienteMateria;
+                }
+                materiaNombre = cursorMateria->nombre;
+                sacarEspacios(materiaNombre);
+                fprintf(flujoMateriaEsc, "%s %i", materiaNombre, cursorMateria->numero);
+            }
+        }
+
+        fflush(flujoMateriaEsc);
+        fclose(flujoMateriaEsc);
+    }
+
+    if(materiaCargada == 1){
+        FILE *flujoMateriaEstudianteEsc= fopen(materiasEstudiantesUbi,"w");
+
+        if(flujoMateriaEstudianteEsc == NULL){
+            perror("Error en la apertura del archivo");
+        }else{
+            cursor = listaEstudiantesNombre;
+            if(cursor != NULL) {
+                MateriaEstudiante *cursorMateriaEstudianteCursando = cursor->estudianteEdad->materiasEnCurso;
+                MateriaEstudiante *cursorMateriaEstudianteAprobadas = cursor->estudianteEdad->materiasAprobadas;
+                while (cursor->siguiente != NULL) {
+                    if(cursorMateriaEstudianteCursando != NULL){
+                        nombre = cursor->nombre;
+                        sacarEspacios(nombre);
+                        apellido = cursor->apellido;
+                        sacarEspacios(apellido);
+                        while(cursorMateriaEstudianteCursando->siguienteMateriaEstudiante != NULL){
+                            materiaNombre = cursorMateriaEstudianteCursando->materia->nombre;
+                            sacarEspacios(materiaNombre);
+                            fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i\n", materiaNombre, nombre, apellido, cursorMateriaEstudianteCursando->nota, cursorMateriaEstudianteCursando->intentos);
+                            cursorMateriaEstudianteCursando = cursorMateriaEstudianteCursando->siguienteMateriaEstudiante;
+                        }
+                        materiaNombre = cursorMateriaEstudianteCursando->materia->nombre;
+                        sacarEspacios(materiaNombre);
+                        fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i", materiaNombre, nombre, apellido, cursorMateriaEstudianteCursando->nota, cursorMateriaEstudianteCursando->intentos);
+                        if(cursorMateriaEstudianteAprobadas != NULL){
+                            fprintf(flujoMateriaEstudianteEsc, "\n");
+                            while(cursorMateriaEstudianteAprobadas->siguienteMateriaEstudiante != NULL){
+                                materiaNombre = cursorMateriaEstudianteAprobadas->materia->nombre;
+                                sacarEspacios(materiaNombre);
+                                fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i\n", materiaNombre, nombre, apellido, cursorMateriaEstudianteAprobadas->nota, cursorMateriaEstudianteAprobadas->intentos);
+                                cursorMateriaEstudianteAprobadas = cursorMateriaEstudianteAprobadas->siguienteMateriaEstudiante;
+                            }
+                            materiaNombre = cursorMateriaEstudianteAprobadas->materia->nombre;
+                            sacarEspacios(materiaNombre);
+                            fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i", materiaNombre, nombre, apellido, cursorMateriaEstudianteAprobadas->nota, cursorMateriaEstudianteAprobadas->intentos);
+                        }
+                    }
+                    cursor = cursor->siguiente;
+                }
+                cursorMateriaEstudianteCursando = cursor->estudianteEdad->materiasEnCurso;
+                cursorMateriaEstudianteAprobadas = cursor->estudianteEdad->materiasAprobadas;
+                if(cursorMateriaEstudianteCursando != NULL){
+                    nombre = cursor->nombre;
+                    sacarEspacios(nombre);
+                    apellido = cursor->apellido;
+                    sacarEspacios(apellido);
+                    while(cursorMateriaEstudianteCursando->siguienteMateriaEstudiante != NULL){
+                        materiaNombre = cursorMateriaEstudianteCursando->materia->nombre;
+                        sacarEspacios(materiaNombre);
+                        fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i\n", materiaNombre, nombre, apellido, cursorMateriaEstudianteCursando->nota, cursorMateriaEstudianteCursando->intentos);
+                        cursorMateriaEstudianteCursando = cursorMateriaEstudianteCursando->siguienteMateriaEstudiante;
+                    }
+                    materiaNombre = cursorMateriaEstudianteCursando->materia->nombre;
+                    sacarEspacios(materiaNombre);
+                    fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i", materiaNombre, nombre, apellido, cursorMateriaEstudianteCursando->nota, cursorMateriaEstudianteCursando->intentos);
+                    if(cursorMateriaEstudianteAprobadas != NULL) {
+                        fprintf(flujoMateriaEstudianteEsc, "\n");
+                        while(cursorMateriaEstudianteAprobadas->siguienteMateriaEstudiante != NULL){
+                            materiaNombre = cursorMateriaEstudianteAprobadas->materia->nombre;
+                            sacarEspacios(materiaNombre);
+                            fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i\n", materiaNombre, nombre, apellido, cursorMateriaEstudianteAprobadas->nota, cursorMateriaEstudianteAprobadas->intentos);
+                            cursorMateriaEstudianteAprobadas = cursorMateriaEstudianteAprobadas->siguienteMateriaEstudiante;
+                        }
+                        materiaNombre = cursorMateriaEstudianteAprobadas->materia->nombre;
+                        sacarEspacios(materiaNombre);
+                        fprintf(flujoMateriaEstudianteEsc, "%s %s %s %.2f %i", materiaNombre, nombre, apellido, cursorMateriaEstudianteAprobadas->nota, cursorMateriaEstudianteAprobadas->intentos);
+                    }
+                }
+            }
+        }
+        fflush(flujoMateriaEstudianteEsc);
+        fclose(flujoMateriaEstudianteEsc);
+    }
+}
+
 int main(){
 
     Materia *listaDeMaterias = NULL;
@@ -154,13 +311,21 @@ int main(){
     char *nombre = (char*) malloc(50*sizeof(char));
     char *apellido = (char*) malloc(50*sizeof(char));
     char *materiaNombre = (char*) malloc(60*sizeof(char));
+    char *estudiantesUbi = "../estudiates.txt";
+    char *materiasUbi = "../materias.txt";
+    char *materiasEstudiantesUbi = "../materiasEstudiantes.txt";
     int anio;
     int mes;
     int dia;
     int dni;
     double nota;
+    int id;
+    char *notaChar = (char*) malloc(50*sizeof(char));
+    int intententos;
+    int materiaCargada = 0;
+    FILE *flujo;
 
-    while(opcion != 15){
+    while(opcion != 17){
         printf("Bienvenido al sistema de estudiante:\nQue deseas hacer?\n"
                "Nota: para el uso correcto de la consola, evitar tildes y utilizar 'ni'\n"
                "para escribir por ejemplo: 'seniales'.\n");
@@ -178,7 +343,9 @@ int main(){
         printf("12. Ver cantidad de estudiantes\n");
         printf("13. Cargar sistema de prueba\n");
         printf("14. Borrar estudiante\n");
-        printf("15. Salir\n");
+        printf("15. Leer Datos\n");
+        printf("16. Guardar Datos\n");
+        printf("17. Salir\n");
         scanf("%i",&opcion);
         switch (opcion) {
             case 1:
@@ -257,6 +424,7 @@ int main(){
                         anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
                         if(cantEstudiantes != materiaPrueba->cantDeEstudiantes){
                             printf("El estudiante %s %s se anoto a %s.\n", estudiantePrueba->nombre, estudiantePrueba->apellido, materiaPrueba->nombre);
+                            materiaCargada = 1;
                         }
                     }
                 } else if(listaEstudiantesNombre == NULL){
@@ -430,6 +598,65 @@ int main(){
                 }
                 break;
             case 15:
+                flujo= fopen(estudiantesUbi,"r");
+                if(flujo == NULL){
+                    perror("Error en la apertura del archivo");
+                } else{
+                    while(feof(flujo) == 0){
+
+                        fscanf(flujo, "%s %s %i %i %i %i",nombre, apellido, &anio, &mes, &dia, &dni);
+                        ponerEspacios(nombre);
+                        ponerEspacios(apellido);
+                        darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre, nombre, apellido, anio, mes, dia, dni);
+                    }
+                }
+                fclose(flujo);
+
+                FILE *flujoMateria= fopen(materiasUbi,"r");
+                if(flujoMateria == NULL){
+                    perror("Error en la apertura del archivo");
+                }else{
+                    while(feof(flujoMateria) == 0){
+                        fscanf(flujoMateria, "%s %i",materiaNombre, &id);
+                        ponerEspacios(materiaNombre);
+                        cargarMateria(&listaDeMaterias, materiaNombre,id);
+                    }
+                }
+                fclose(flujoMateria);
+
+                FILE *flujoMateriaEstudiante= fopen(materiasEstudiantesUbi,"r");
+                if(flujoMateriaEstudiante == NULL){
+                    perror("Error en la apertura del archivo");
+                }else{
+                    while(feof(flujoMateriaEstudiante) == 0){
+
+                        fscanf(flujoMateriaEstudiante, "%s %s %s %s %i",materiaNombre, nombre, apellido, notaChar, &intententos);
+                        ponerEspacios(materiaNombre);
+                        ponerEspacios(nombre);
+                        ponerEspacios(apellido);
+                        nota = atof(notaChar);
+                        estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombre, apellido);
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, materiaNombre);
+                        if(estudiantePrueba != NULL && materiaPrueba != NULL){
+                            anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                            if(nota>-1 && intententos>0 && intententos<3){
+                                cargarNotaAMateria(materiaNombre, estudiantePrueba, nota);
+                                if(nota < 4){
+                                    obtenerMateriaEstudiantePorNombre(&estudiantePrueba->materiasEnCurso, materiaNombre)->intentos = intententos;
+                                }else{
+                                    obtenerMateriaEstudiantePorNombre(&estudiantePrueba->materiasAprobadas, materiaNombre)->intentos = intententos;
+                                }
+                            }
+                        }
+                    }
+                }
+                fclose(flujoMateriaEstudiante);
+                break;
+            case 16:
+                cargarArchivo(listaEstudiantes, listaEstudiantesNombre, listaDeMaterias,estudiantesUbi, materiasUbi, materiasEstudiantesUbi, materiaCargada);
+                printf("Se guardaron los datos.\n");
+                break;
+            case 17:
                 printf("Gracias por utilizar el sistema.\n");
                 break;
             default:
