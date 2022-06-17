@@ -341,13 +341,76 @@ int main(){
                 obtenerCantidadDeEstudiantes();
                 break;
             case 13:
-                for (int i = 0; i < 164; ++i) {
+                for (int i = 0; i < 500; ++i) {
+                    anio = 1977 + rand() % (2004 - 1977 + 1);
+                    mes = 1 + rand() % 12;
+                    dia = 1 + rand() % 25;
+                    dni = 45000000 + rand() % (45155444 - 45000000 + 1);
                     darDeAltaEstudiante(&listaEstudiantes, &listaEstudiantesNombre,
-                                        nombres[i], apellidos[i], anios[i], meses[i],
-                                        dias[i], dnis[i]);
+                                        nombres[i], apellidos[i], anio, mes,
+                                        dia, dni);
                 }
                 for (int i = 0; i < 45; ++i) {
                     cargarMateria(&listaDeMaterias, arregloMaterias[i], i + 1);
+                }
+                for (int i = 0; i < 45; ++i) {
+                    cargarMateria(&materiaPrueba, arregloMaterias[i], i + 1);
+                }
+
+                for (int i = 0; i < 100; ++i) {
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
+                    for (int j = 0; j < 10; ++j) {
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, arregloMaterias[j]);
+                        anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if (j < 7) {
+                            nota = rand() % 10;
+                            cargarNotaAMateria(arregloMaterias[j], estudiantePrueba, nota);
+                        }
+                    }
+                }
+                for (int i = 100; i < 200; ++i) {
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
+                    for (int j = 0; j < 17; ++j) {
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, arregloMaterias[j]);
+                        anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if (j < 13) {
+                            nota = rand() % 10;
+                            cargarNotaAMateria(arregloMaterias[j], estudiantePrueba, nota);
+                        }
+                    }
+                }
+                for (int i = 200; i < 300; ++i) {
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
+                    for (int j = 0; j < 25; ++j) {
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, arregloMaterias[j]);
+                        anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if (j < 23) {
+                            nota = rand() % 10;
+                            cargarNotaAMateria(arregloMaterias[j], estudiantePrueba, nota);
+                        }
+                    }
+                }
+                for (int i = 300; i < 400; ++i) {
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
+                    for (int j = 0; j < 30; ++j) {
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, arregloMaterias[j]);
+                        anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if (j < 27) {
+                            nota = rand() % 10;
+                            cargarNotaAMateria(arregloMaterias[j], estudiantePrueba, nota);
+                        }
+                    }
+                }
+                for (int i = 400; i < 500; ++i) {
+                    estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
+                    for (int j = 0; j < 41; ++j) {
+                        materiaPrueba = obtenerMateriaPorNombre(&listaDeMaterias, arregloMaterias[j]);
+                        anotarEstudianteAMateria(materiaPrueba, estudiantePrueba);
+                        if (j < 39) {
+                            nota = rand() % 10;
+                            cargarNotaAMateria(arregloMaterias[j], estudiantePrueba, nota);
+                        }
+                    }
                 }
                 break;
             case 14:
