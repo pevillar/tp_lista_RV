@@ -356,10 +356,7 @@ int main(){
                 }
                 for (int i = 0; i < 45; ++i) {
                     cargarMateria(&listaDeMaterias, arregloMaterias[i], i + 1);
-                }/*
-                for (int i = 0; i < 45; ++i) {
-                    cargarMateria(&materiaPrueba, arregloMaterias[i], i + 1);
-                }*/
+                }
                 for (int i = 0; i < 100; ++i) {
                     estudiantePrueba = buscarEstudiantePorNombreCompleto(listaEstudiantesNombre, nombres[i], apellidos[i]);
                     for (int j = 0; j < 10; ++j) {

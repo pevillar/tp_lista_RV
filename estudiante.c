@@ -137,14 +137,14 @@ char* obtenerNacimiento( int *anio, int *mes, int *dia){
     char year[5];
     char day[2];
     char month[2];
-    sprintf(day, "%i", *dia);
-    strcat(nacimiento, day);
+    sprintf(year, "%i", *anio);
+    strcat(nacimiento, year);
     strcat(nacimiento, "-");
     sprintf(month, "%i", *mes);
     strcat(nacimiento, month);
     strcat(nacimiento, "-");
-    sprintf(year, "%i", *anio);
-    strcat(nacimiento,year);
+    sprintf(day, "%i", *dia);
+    strcat(nacimiento,day);
     return nacimiento;
 }
 
@@ -216,8 +216,8 @@ void imprimirEstudiante(Estudiante *estudiante){
  * @param estudiante
  */
 void imprimirMateriasEnCurso(Estudiante *estudiante) {
+    printf("\nMaterias Cursando: \n");
     if(estudiante->materiasEnCurso != NULL) {
-        printf("\nMaterias Cursando: \n");
         imprimirMateriasEstudiante(estudiante->materiasEnCurso);
     }else{
         printf("el estudiante %s %s no esta cursando ninguna materia.\n", estudiante->nombre, estudiante->apellido);
@@ -225,8 +225,8 @@ void imprimirMateriasEnCurso(Estudiante *estudiante) {
 }
 
 void imprimirMateriasAprobadas(Estudiante *estudiante){
+    printf("Materias Aprobadas: \n");
     if(estudiante->materiasAprobadas != NULL) {
-        printf("Materias Aprobadas: \n");
         imprimirMateriasAprobadasEstudiante(estudiante->materiasAprobadas);
     }else{
         printf("el estudiante %S %S no ha aprobado ninguna materia.", estudiante->nombre, estudiante->apellido);

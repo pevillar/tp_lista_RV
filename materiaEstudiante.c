@@ -150,7 +150,7 @@ void borrarMateriaEstudiantePorNombre(MateriaEstudiante *listaNombre, char *nomb
  */
 void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
-        printf("%s\n", listaMateria->materia->nombre);
+        printf("%s: \n", listaMateria->materia->nombre);
         if(listaMateria->nota == -1){
             printf("El alumno esta cursando la materia\n");
         }else{
@@ -165,6 +165,7 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
                 }
             }
         }
+        printf("\n");
         listaMateria = listaMateria->siguienteMateriaEstudiante;
     }
     printf("\n");
@@ -176,8 +177,8 @@ void imprimirMateriasEstudiante(MateriaEstudiante *listaMateria) {
  */
 void imprimirMateriasAprobadasEstudiante(MateriaEstudiante *listaMateria) {
     while (listaMateria != NULL) {
-        printf("%s\n", listaMateria->materia->nombre);
-        printf("Nota: %.2f\n", listaMateria->nota);
+        printf("%s:\n", listaMateria->materia->nombre);
+        printf("Nota: %.2f\n\n", listaMateria->nota);
         listaMateria = listaMateria->siguienteMateriaEstudiante;
     }
     printf("\n");
