@@ -32,6 +32,7 @@ podrá utilizar las siguientes funciones:
 #####Puntos extras
 Además implementamos algunos puntos extras para que el sistema sea mas completo,
 así el usuario tambien puede:
+* cargar los dadtos del sistema en un archivo externo utilizando persistencia
 * eliminar algun estudiante del sistema
 * obtener estadísticas de cada materia (promedio de aprobados, y
 nota promedio)
