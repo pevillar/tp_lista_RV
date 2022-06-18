@@ -141,6 +141,10 @@ void convertirAMinuscula(char *cadena) {
     }
 }
 
+/**
+ * Cambia los guines '-' por espacios ' '.
+ * @param nombreSinEspacios
+ */
 void ponerEspacios(char *nombreSinEspacios){
     int tamanio = strlen(nombreSinEspacios);
     for(int i = 0; i<tamanio; i++){
@@ -149,6 +153,11 @@ void ponerEspacios(char *nombreSinEspacios){
         }
     }
 }
+
+/**
+ * Cammbia los espacios ' ' por guines '-'.
+ * @param nombreSinEspacios
+ */
 void sacarEspacios(char *nombreSinEspacios){
     int tamanio = strlen(nombreSinEspacios);
     for(int i = 0; i<tamanio; i++){
@@ -158,6 +167,16 @@ void sacarEspacios(char *nombreSinEspacios){
     }
 }
 
+/**
+ * Se escribe en archivos los datos actuales del sistema si las listas no son nulas.
+ * @param listaEstudiantes
+ * @param listaEstudiantesNombre
+ * @param listaDeMaterias
+ * @param estudiantesUbi
+ * @param materiasUbi
+ * @param materiasEstudiantesUbi
+ * @param materiaCargada
+ */
 void cargarArchivo(Estudiante *listaEstudiantes, EstudiantePorNombre *listaEstudiantesNombre,Materia *listaDeMaterias,
                    char *estudiantesUbi, char *materiasUbi, char *materiasEstudiantesUbi, int materiaCargada){
 
@@ -221,7 +240,6 @@ void cargarArchivo(Estudiante *listaEstudiantes, EstudiantePorNombre *listaEstud
         fflush(flujoMateriaEsc);
         fclose(flujoMateriaEsc);
     }
-
     if(materiaCargada == 1){
         FILE *flujoMateriaEstudianteEsc= fopen(materiasEstudiantesUbi,"w");
 
@@ -580,6 +598,7 @@ int main(){
                         }
                     }
                 }
+                materiaCargada = 1;
                 break;
             case 14:
                 printf("Nota: escribir primero el nombre, luego el apellido cuando sea indicado.\n");
@@ -598,6 +617,7 @@ int main(){
                 }
                 break;
             case 15:
+                printf("Recorda que primero hay que guardar los datos para poder leerlos.");
                 flujo= fopen(estudiantesUbi,"r");
                 if(flujo == NULL){
                     perror("Error en la apertura del archivo");
